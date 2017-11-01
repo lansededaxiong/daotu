@@ -21,15 +21,15 @@ use think\Db;
 class AdminTagController extends AdminBaseController
 {
     /**
-     * 文章标签管理
+     * 标签管理
      * @adminMenu(
-     *     'name'   => '文章标签',
+     *     'name'   => '标签',
      *     'parent' => 'portal/AdminIndex/default',
      *     'display'=> true,
      *     'hasView'=> true,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '文章标签',
+     *     'remark' => '标签',
      *     'param'  => ''
      * )
      */
@@ -45,15 +45,15 @@ class AdminTagController extends AdminBaseController
     }
 
     /**
-     * 添加文章标签
+     * 添加标签
      * @adminMenu(
-     *     'name'   => '添加文章标签',
+     *     'name'   => '添加标签',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> true,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '添加文章标签',
+     *     'remark' => '添加标签',
      *     'param'  => ''
      * )
      */
@@ -65,15 +65,15 @@ class AdminTagController extends AdminBaseController
     }
 
     /**
-     * 添加文章标签提交
+     * 添加标签提交
      * @adminMenu(
-     *     'name'   => '添加文章标签提交',
+     *     'name'   => '添加标签提交',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> false,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '添加文章标签提交',
+     *     'remark' => '添加标签提交',
      *     'param'  => ''
      * )
      */
@@ -90,7 +90,7 @@ class AdminTagController extends AdminBaseController
     }
 
     /**
-     * 更新文章标签状态
+     * 更新标签状态
      * @adminMenu(
      *     'name'   => '更新标签状态',
      *     'parent' => 'index',
@@ -141,7 +141,7 @@ class AdminTagController extends AdminBaseController
         $portalTagModel = new PortalTagModel();
 
         $portalTagModel->where(['id' => $intId])->delete();
-        Db::name('portal_tag_post')->where('tag_id', $intId)->delete();
+        Db::name('portal_tag_exam')->where('tag_id', $intId)->delete();
         $this->success(lang("DELETE_SUCCESS"));
     }
 }

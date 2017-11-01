@@ -10,111 +10,103 @@
 // +----------------------------------------------------------------------
 namespace app\portal\controller;
 
-use app\admin\model\RouteModel;
 use cmf\controller\AdminBaseController;
-use app\portal\model\PortalCategoryModel;
+use app\portal\model\PortalKnowledgeModel;
 use think\Db;
-use app\admin\model\ThemeModel;
 
 
-class AdminCategoryController extends AdminBaseController
+class AdminKnowledgeController extends AdminBaseController
 {
     /**
-     * 分类列表
+     * 试题知识点列表
      * @adminMenu(
-     *     'name'   => '分类管理',
+     *     'name'   => '试题知识点管理',
      *     'parent' => 'portal/AdminIndex/default',
      *     'display'=> true,
      *     'hasView'=> true,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '分类列表',
+     *     'remark' => '试题知识点列表',
      *     'param'  => ''
      * )
      */
     public function index()
     {
-        $portalCategoryModel = new PortalCategoryModel();
-        $categoryTree        = $portalCategoryModel->adminCategoryTableTree();
+        $portalKnowledgeModel = new PortalKnowledgeModel();
+        $knowledgeTree        = $portalKnowledgeModel->adminKnowledgeTableTree();
 
-        $this->assign('category_tree', $categoryTree);
+        $this->assign('knowledge_tree', $knowledgeTree);
         return $this->fetch();
     }
 
     /**
-     * 添加分类
+     * 添加试题知识点
      * @adminMenu(
-     *     'name'   => '添加分类',
+     *     'name'   => '添加试题知识点',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> true,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '添加文章分类',
+     *     'remark' => '添加试题知识点',
      *     'param'  => ''
      * )
      */
     public function add()
     {
         $parentId            = $this->request->param('parent', 0, 'intval');
-        $portalCategoryModel = new PortalCategoryModel();
-        $categoriesTree      = $portalCategoryModel->adminCategoryTree($parentId);
+        $portalKnowledgeModel = new PortalKnowledgeModel();
+        $knowledgesTree      = $portalKnowledgeModel->adminKnowledgeTree($parentId);
 
-        $themeModel        = new ThemeModel();
-        $listThemeFiles    = $themeModel->getActionThemeFiles('portal/List/index');
-        $articleThemeFiles = $themeModel->getActionThemeFiles('portal/Article/index');
-
-        $this->assign('list_theme_files', $listThemeFiles);
-        $this->assign('article_theme_files', $articleThemeFiles);
-        $this->assign('categories_tree', $categoriesTree);
+        $this->assign('knowledges_tree', $knowledgesTree);
         return $this->fetch();
     }
 
     /**
-     * 添加分类提交
+     * 添加试题知识点提交
      * @adminMenu(
-     *     'name'   => '添加分类提交',
+     *     'name'   => '添加试题知识点提交',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> false,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '添加分类提交',
+     *     'remark' => '添加试题知识点提交',
      *     'param'  => ''
      * )
      */
-    public function addPost()
+    public function addKnowledge()
     {
-        $portalCategoryModel = new PortalCategoryModel();
+        $portalKnowledgeModel = new PortalKnowledgeModel();
 
         $data = $this->request->param();
 
-        $result = $this->validate($data, 'PortalCategory');
+        $result = $this->validate($data, 'PortalKnowledge');
 
         if ($result !== true) {
             $this->error($result);
         }
 
-        $result = $portalCategoryModel->addCategory($data);
+        $result = $portalKnowledgeModel->addKnowledge($data);
 
         if ($result === false) {
             $this->error('添加失败!');
         }
 
-        $this->success('添加成功!', url('AdminCategory/index'));
+        $this->success('添加成功!', url('AdminKnowledge/index'));
 
     }
 
     /**
-     * 编辑分类
+     * 编辑试题知识点
      * @adminMenu(
-     *     'name'   => '编辑分类',
+     *     'name'   => '编辑试题知识点',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> true,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '编辑分类',
+     *     'remark' => '编辑试题知识点',
      *     'param'  => ''
      * )
      */
@@ -122,23 +114,14 @@ class AdminCategoryController extends AdminBaseController
     {
         $id = $this->request->param('id', 0, 'intval');
         if ($id > 0) {
-            $category = PortalCategoryModel::get($id)->toArray();
+            $knowledge = PortalKnowledgeModel::get($id)->toArray();
 
-            $portalCategoryModel = new PortalCategoryModel();
-            $categoriesTree      = $portalCategoryModel->adminCategoryTree($category['parent_id'], $id);
+            $portalKnowledgeModel = new PortalKnowledgeModel();
+            $knowledgesTree      = $portalKnowledgeModel->adminKnowledgeTree($knowledge['parent_id'], $id);
 
-            $themeModel        = new ThemeModel();
-            $listThemeFiles    = $themeModel->getActionThemeFiles('portal/List/index');
-            $articleThemeFiles = $themeModel->getActionThemeFiles('portal/Article/index');
+            $this->assign($knowledge);
 
-            $routeModel = new RouteModel();
-            $alias      = $routeModel->getUrl('portal/List/index', ['id' => $id]);
-
-            $category['alias'] = $alias;
-            $this->assign($category);
-            $this->assign('list_theme_files', $listThemeFiles);
-            $this->assign('article_theme_files', $articleThemeFiles);
-            $this->assign('categories_tree', $categoriesTree);
+            $this->assign('knowledges_tree', $knowledgesTree);
             return $this->fetch();
         } else {
             $this->error('操作错误!');
@@ -147,31 +130,31 @@ class AdminCategoryController extends AdminBaseController
     }
 
     /**
-     * 编辑文章分类提交
+     * 编辑试题知识点提交
      * @adminMenu(
-     *     'name'   => '编辑分类提交',
+     *     'name'   => '编辑试题知识点提交',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> false,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '编辑分类提交',
+     *     'remark' => '编辑试题知识点提交',
      *     'param'  => ''
      * )
      */
-    public function editPost()
+    public function editKnowledge()
     {
         $data = $this->request->param();
 
-        $result = $this->validate($data, 'PortalCategory');
+        $result = $this->validate($data, 'PortalKnowledge');
 
         if ($result !== true) {
             $this->error($result);
         }
 
-        $portalCategoryModel = new PortalCategoryModel();
+        $portalKnowledgeModel = new PortalKnowledgeModel();
 
-        $result = $portalCategoryModel->editCategory($data);
+        $result = $portalKnowledgeModel->editKnowledge($data);
 
         if ($result === false) {
             $this->error('保存失败!');
@@ -181,15 +164,15 @@ class AdminCategoryController extends AdminBaseController
     }
 
     /**
-     * 文章分类选择对话框
+     * 试题知识点选择对话框
      * @adminMenu(
-     *     'name'   => '分类选择对话框',
+     *     'name'   => '试题知识点选择对话框',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> true,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '分类选择对话框',
+     *     'remark' => '试题知识点选择对话框',
      *     'param'  => ''
      * )
      */
@@ -197,7 +180,7 @@ class AdminCategoryController extends AdminBaseController
     {
         $ids                 = $this->request->param('ids');
         $selectedIds         = explode(',', $ids);
-        $portalCategoryModel = new PortalCategoryModel();
+        $portalKnowledgeModel = new PortalKnowledgeModel();
 
         $tpl = <<<tpl
 <tr class='data-item-tr'>
@@ -210,79 +193,79 @@ class AdminCategoryController extends AdminBaseController
 </tr>
 tpl;
 
-        $categoryTree = $portalCategoryModel->adminCategoryTableTree($selectedIds, $tpl);
+        $knowledgeTree = $portalKnowledgeModel->adminKnowledgeTableTree($selectedIds, $tpl);
 
         $where      = ['delete_time' => 0];
-        $categories = $portalCategoryModel->where($where)->select();
+        $knowledges = $portalKnowledgeModel->where($where)->select();
 
-        $this->assign('categories', $categories);
+        $this->assign('knowledges', $knowledges);
         $this->assign('selectedIds', $selectedIds);
-        $this->assign('categories_tree', $categoryTree);
+        $this->assign('knowledge_tree', $knowledgeTree);
         return $this->fetch();
     }
 
     /**
-     * 文章分类排序
+     * 试题知识点排序
      * @adminMenu(
-     *     'name'   => '分类排序',
+     *     'name'   => '试题知识点排序',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> false,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '分类排序',
+     *     'remark' => '试题知识点排序',
      *     'param'  => ''
      * )
      */
     public function listOrder()
     {
-        parent::listOrders(Db::name('portal_category'));
+        parent::listOrders(Db::name('portal_knowledge'));
         $this->success("排序更新成功！", '');
     }
 
     /**
-     * 删除文章分类
+     * 删除试题知识点
      * @adminMenu(
-     *     'name'   => '删除分类',
+     *     'name'   => '删除试题知识点',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> false,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '删除文章分类',
+     *     'remark' => '删除试题知识点',
      *     'param'  => ''
      * )
      */
     public function delete()
     {
-        $portalCategoryModel = new PortalCategoryModel();
+        $portalKnowledgeModel = new PortalKnowledgeModel();
         $id                  = $this->request->param('id');
         //获取删除的内容
-        $findCategory = $portalCategoryModel->where('id', $id)->find();
+        $findKnowledge = $portalKnowledgeModel->where('id', $id)->find();
 
-        if (empty($findCategory)) {
+        if (empty($findKnowledge)) {
             $this->error('分类不存在!');
         }
 
-        $categoryChildrenCount = $portalCategoryModel->where('parent_id', $id)->count();
+        $knowledgeChildrenCount = $portalKnowledgeModel->where('parent_id', $id)->count();
 
-        if ($categoryChildrenCount > 0) {
-            $this->error('此分类有子类无法删除!');
+        if ($knowledgeChildrenCount > 0) {
+            $this->error('此知识点有子类无法删除!');
         }
 
-        $categoryPostCount = Db::name('portal_category_post')->where('category_id', $id)->count();
+        $knowledgePointCount = Db::name('portal_knowledge_point')->where('knowledge_id', $id)->count();
 
-        if ($categoryPostCount > 0) {
+        if ($knowledgePointCount > 0) {
             $this->error('此分类有文章无法删除!');
         }
 
         $data   = [
-            'object_id'   => $findCategory['id'],
+            'object_id'   => $findKnowledge['id'],
             'create_time' => time(),
-            'table_name'  => 'portal_category',
-            'name'        => $findCategory['name']
+            'table_name'  => 'portal_knowledge',
+            'name'        => $findKnowledge['name']
         ];
-        $result = $portalCategoryModel
+        $result = $portalKnowledgeModel
             ->where('id', $id)
             ->update(['delete_time' => time()]);
         if ($result) {

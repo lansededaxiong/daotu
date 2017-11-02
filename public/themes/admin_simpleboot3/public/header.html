@@ -16,6 +16,7 @@
     <link href="__TMPL__/public/assets/themes/{:cmf_get_admin_style()}/bootstrap.min.css" rel="stylesheet">
     <link href="__TMPL__/public/assets/simpleboot3/css/simplebootadmin.css" rel="stylesheet">
     <link href="__STATIC__/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         form .input-order {
             margin-bottom: 0px;
@@ -41,6 +42,9 @@
         .form-required {
             color: red;
         }
+        *:focus {outline:none;}
+        #mathEditorFrame{height: 500px; width: 100%; border: 0;}
+        #preview{padding: 30px; font-size: 18px;}
     </style>
     <script type="text/javascript">
         //全局变量
@@ -52,8 +56,11 @@
         };
     </script>
     <script src="__TMPL__/public/assets/js/jquery-1.10.2.min.js"></script>
+    <!--<script src="__TMPL__/public/assets/js/jquery-3.2.1.min.js"></script>-->
     <script src="__STATIC__/js/wind.js"></script>
     <script src="__TMPL__/public/assets/js/bootstrap.min.js"></script>
+    <script src="__TMPL__/public/assets/MathEditor/MathJax/MathJax.js?config=AM_CHTML,Safe&locale=zh-hans"></script>
+    <script src="__TMPL__/public/assets/MathEditor/index.js"></script>
     <script>
         Wind.css('artDialog');
         Wind.css('layer');

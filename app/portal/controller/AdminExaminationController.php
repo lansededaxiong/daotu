@@ -143,7 +143,6 @@ class AdminExaminationController extends AdminBaseController
         $examPoints = $exam->point()->column('point_name');
         $examPointNames = implode(',', array_values($examPoints));
         $this->assign('exam_point_names', $examPointNames);
-
         $themeModel        = new ThemeModel();
         $articleThemeFiles = $themeModel->getActionThemeFiles('portal/Article/index');
         $this->assign('article_theme_files', $articleThemeFiles);
@@ -187,7 +186,6 @@ class AdminExaminationController extends AdminBaseController
                     array_push($data['exam']['more']['files'], ["url" => $fileUrl, "name" => $data['file_names'][$key]]);
                 }
             }
-
             $portalExaminationModel->adminEditExam($data['exam'], $data['exam']['categories'],$data['exam_points']);
 
             $this->success('保存成功!');

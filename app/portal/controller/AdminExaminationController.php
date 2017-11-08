@@ -15,7 +15,6 @@ use app\portal\model\PortalExaminationModel;
 use app\portal\service\ExaminationService;
 use app\portal\model\PortalCategoryModel;
 use think\Db;
-use app\admin\model\ThemeModel;
 
 class AdminExaminationController extends AdminBaseController
 {
@@ -72,9 +71,6 @@ class AdminExaminationController extends AdminBaseController
      */
     public function add()
     {
-        $themeModel        = new ThemeModel();
-        $articleThemeFiles = $themeModel->getActionThemeFiles('portal/Article/index');
-        $this->assign('article_theme_files', $articleThemeFiles);
         return $this->fetch();
     }
 
@@ -96,6 +92,7 @@ class AdminExaminationController extends AdminBaseController
         if ($this->request->isPost()) {
             $data   = $this->request->param();
             $exam   = $data['exam'];
+
             $result = $this->validate($exam, 'PortalExamination');
             if ($result !== true) {
                 $this->error($result);
@@ -140,12 +137,6 @@ class AdminExaminationController extends AdminBaseController
         $examCategories  = $exam->categories()->alias('e')->column('e.name', 'e.id');
         $examCategoryIds = implode(',', array_keys($examCategories));
 
-        $examPoints = $exam->point()->column('point_name');
-        $examPointNames = implode(',', array_values($examPoints));
-        $this->assign('exam_point_names', $examPointNames);
-        $themeModel        = new ThemeModel();
-        $articleThemeFiles = $themeModel->getActionThemeFiles('portal/Article/index');
-        $this->assign('article_theme_files', $articleThemeFiles);
         $this->assign('exam', $exam);
         $this->assign('post_categories', $examCategories);
         $this->assign('post_category_ids', $examCategoryIds);
@@ -172,6 +163,7 @@ class AdminExaminationController extends AdminBaseController
         if ($this->request->isPost()) {
             $data   = $this->request->param();
             $exam   = $data['exam'];
+
             $result = $this->validate($exam, 'PortalExamination');
             if ($result !== true) {
                 $this->error($result);

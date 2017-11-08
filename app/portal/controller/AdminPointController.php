@@ -19,15 +19,15 @@ use think\Db;
 class AdminPointController extends AdminBaseController
 {
     /**
-     * 试题埋点列表
+     * 公式列表
      * @adminMenu(
-     *     'name'   => '试题埋点管理',
+     *     'name'   => '公式管理',
      *     'parent' => 'portal/AdminIndex/default',
      *     'display'=> true,
      *     'hasView'=> true,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '试题埋点列表',
+     *     'remark' => '公式列表',
      *     'param'  => ''
      * )
      */
@@ -55,15 +55,34 @@ class AdminPointController extends AdminBaseController
     }
 
     /**
-     * 编辑试题埋点
+     * 新增公式
      * @adminMenu(
-     *     'name'   => '编辑试题埋点',
+     *     'name'   => '新增公式',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> true,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '编辑试题埋点',
+     *     'remark' => '新增公式',
+     *     'param'  => ''
+     * )
+     */
+    public function add()
+    {
+
+        return $this->fetch();
+    }
+
+    /**
+     * 编辑公式
+     * @adminMenu(
+     *     'name'   => '编辑公式',
+     *     'parent' => 'index',
+     *     'display'=> false,
+     *     'hasView'=> true,
+     *     'order'  => 10000,
+     *     'icon'   => '',
+     *     'remark' => '编辑公式',
      *     'param'  => ''
      * )
      */
@@ -84,15 +103,15 @@ class AdminPointController extends AdminBaseController
     }
 
     /**
-     * 编辑试题埋点提交
+     * 编辑公式提交
      * @adminMenu(
-     *     'name'   => '编辑试题埋点提交',
+     *     'name'   => '编辑公式提交',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> false,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '编辑试题埋点提交',
+     *     'remark' => '编辑公式提交',
      *     'param'  => ''
      * )
      */
@@ -101,6 +120,11 @@ class AdminPointController extends AdminBaseController
 
         if ($this->request->isPost()) {
             $data   = $this->request->param();
+            $point = $data['point'];
+            if($point['point_content']){
+                $examContent = strstr( $point['point_content'], '&lt;script');
+                $data['point']['point_content'] = $examContent;
+            }
             /*$point   = $data['point'];
             $result = $this->validate($point, 'AdminPoint');
             if ($result !== true) {
@@ -117,15 +141,15 @@ class AdminPointController extends AdminBaseController
 
 
     /**
-     * 试题埋点排序
+     * 公式排序
      * @adminMenu(
-     *     'name'   => '试题埋点排序',
+     *     'name'   => '公式排序',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> false,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '试题埋点排序',
+     *     'remark' => '公式排序',
      *     'param'  => ''
      * )
      */

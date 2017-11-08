@@ -227,7 +227,7 @@ class PortalExaminationModel extends Model
             foreach ($newPointNames as $newPointName){
                 $newPointName = trim($newPointName);
                 if (!empty($newPointName)) {
-                    array_push($data, ['point_name' => $newPointName, 'exam_id' => $examId]);
+                    array_push($data, ['point_name' => $newPointName, 'exam_id' => $examId,'create_time' => time()]);
                 }
             }
             if (!empty($needDeletePointNames)) {

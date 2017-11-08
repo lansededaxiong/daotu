@@ -35,7 +35,7 @@
         </li>
         <li class="active"><a href="#">编辑试题</a></li>
     </ul>
-    <form action="{:url('AdminExamination/editExam')}" method="post" class="form-horizontal js-ajax-form margin-top-20">
+    <form action="{:url('AdminExamination/editExam')}" method="post" class="form-horizontal js-ajax-form margin-top-20" id="form">
         <div class="row">
             <div class="col-md-9">
                 <table class="table table-bordered">
@@ -68,26 +68,10 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>试题埋点</th>
-                        <td>
-                            <input class="form-control" type="text" name="exam_points"
-                                   value="{$exam_point_names}" placeholder="请输入试题埋点">
-                            <p class="help-block">多试题埋点之间用英文逗号隔开</p>
-                        </td>
-                    </tr>
-                    <tr>
                         <th>内容</th>
                         <td>
                             <textarea id="preview" name="exam[exam_content]" class="form-control" rows="5" style="display: none;" >{$exam.exam_content}</textarea>
                             <iframe id="mathEditorFrame" src="__TMPL__/public/assets/MathEditor/index.html?exam_id={$exam.id}"></iframe>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>test</th>
-                        <td>
-                            <div id="preview2">
-
-                            </div>
                         </td>
                     </tr>
                     <tr>
@@ -183,26 +167,11 @@
                             </div>
                         </td>
                     </tr>
-                    <tr>
-                        <th>文章模板</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <select class="form-control" name="exam[more][template]" id="more-template-select">
-                                <option value="">请选择模板</option>
-                                <foreach name="article_theme_files" item="vo">
-                                    <php>$value=preg_replace('/^portal\//','',$vo['file']);</php>
-                                    <option value="{$value}">{$vo.file}.html</option>
-                                </foreach>
-                            </select>
-                        </td>
-                    </tr>
                 </table>
             </div>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button id="fat-btn" class="btn btn-primary" data-loading-text="Loading..." type="button">提 交</button>
                 <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('SAVE')}</button>
                 <a class="btn btn-default" href="javascript:history.back(-1);">{:lang('BACK')}</a>
             </div>
@@ -218,16 +187,20 @@
 <script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.all.min.js"></script>-->
 <script type="text/javascript">
     $(function () {
+        /*editorcontent = new baidu.editor.ui.Editor();
+        editorcontent.render('content');
+        try {
+            editorcontent.sync();
+        } catch (err) {
+        }*/
         var exam_content =  $("#preview").val();
         var key = "{$exam.id}";
         sessionStorage.setItem('exam_' + key,null); // 存入一个值
         sessionStorage.setItem('exam_' + key,exam_content); // 存入一个值
         $(".btn").click(function(){
             console.log(loadMathEditor('mathEditorFrame'));
-            $("#preview2").html(loadMathEditor('mathEditorFrame'));
+            $("#preview").val(loadMathEditor('mathEditorFrame'));
         });
-
-
         $('.btn-cancel-thumbnail').click(function () {
             $('#thumbnail-preview').attr('src', '__TMPL__/public/assets/images/default-thumbnail.png');
             $('#thumbnail').val('');

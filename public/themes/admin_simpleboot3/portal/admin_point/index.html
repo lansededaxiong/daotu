@@ -3,7 +3,8 @@
 <body>
 <div class="wrap js-check-wrap">
     <ul class="nav nav-tabs">
-        <li class="active"><a href="javascript:;">所有试题埋点</a></li>
+        <li class="active"><a href="javascript:;">所有公式</a></li>
+        <li><a href="{:url('AdminPoint/add')}">新增公式</a></li>
     </ul>
     <form class="well form-inline margin-top-20" method="post" action="{:url('AdminPoint/index')}">
         分类:
@@ -43,7 +44,6 @@
                 <th width="50">{:lang('SORT')}</th>
                 <th width="50">ID</th>
                 <th>标题</th>
-                <th>所属试题</th>
                 <th width="130">创建时间</th>
                 <th width="90">操作</th>
             </tr>
@@ -62,9 +62,7 @@
                     <td>
                          {$vo.point_name}
                     </td>
-                    <td>
-                        {$vo.exam_title}
-                    </td>
+
                     <td>
                         <notempty name="vo.create_time">
                             {:date('Y-m-d H:i',$vo['create_time'])}
@@ -82,7 +80,6 @@
                 <th width="50">{:lang('SORT')}</th>
                 <th width="50">ID</th>
                 <th>标题</th>
-                <th>所属试题</th>
                 <th width="130">创建时间</th>
                 <th width="90">操作</th>
             </tr>

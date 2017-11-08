@@ -76,8 +76,15 @@ class UeditorController extends HomeBaseController
                 $result = $this->ueditorUpload("image");
                 break;
             /* 上传涂鸦 */
+           /* case 'uploadscrawl':
+
+                $result = $this->ueditorUpload('image');
+
+                break;*/
             case 'uploadscrawl':
-                $result = $this->ueditorUpload("image");
+                $postData = $this->request->param();
+                $result = $this->base64_upload('data:image/png;base64,'.$postData['upfile']);
+                return json_encode($result);
                 break;
             /* 上传视频 */
             case 'uploadvideo':
@@ -377,5 +384,35 @@ class UeditorController extends HomeBaseController
             }
         }
         return $files;
+    }
+    /**
+     * 封装base64位图片上传
+     */
+    function base64_upload($base64) {
+        $base64_image = str_replace(' ', '+', $base64);
+        //post的数据里面，加号会被替换为空格，需要重新替换回来，如果不是post的数据，则注释掉这一行
+        if (preg_match('/^(data:\s*image\/(\w+);base64,)/', $base64_image, $result)){
+            //匹配成功
+            if($result[2] == 'jpeg'){
+                $image_name = uniqid().'.jpg';
+                //纯粹是看jpeg不爽才替换的
+            }else{
+                $image_name = uniqid().'.'.$result[2];
+            }
+            $strDate    = date('Ymd');
+            $image_file = "./upload/portal/{$strDate}/{$image_name}";
+            $strSaveFileDir  = dirname($image_file);
+            if (!file_exists($strSaveFileDir)) {
+                mkdir($strSaveFileDir, 0777, true);
+            }
+            //服务器文件存储路径
+            if (file_put_contents($image_file, base64_decode(str_replace($result[1], '', $base64_image)))){
+                return $image_name;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
     }
 }

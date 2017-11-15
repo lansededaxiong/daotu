@@ -84,7 +84,7 @@ class PortalExaminationModel extends Model
      * @param string $examPoints
      * @return $this
      */
-    public function adminAddExam($data, $categories,$examPoints)
+    public function adminAddExam($data, $categories)
     {
         $data['user_id'] = cmf_get_current_admin_id();
 
@@ -101,11 +101,8 @@ class PortalExaminationModel extends Model
         $this->categories()->save($categories);
 
         $data['exam_keywords'] = str_replace('，', ',', $data['exam_keywords']);
-        $examPoints = str_replace('，', ',', $examPoints);
         $keywords = explode(',', $data['exam_keywords']);
-        $examPoints = explode(',', $examPoints);
         $this->addTags($keywords, $this->id);
-        $this->addPoints($examPoints,$this->id);
         return $this;
 
     }
@@ -117,7 +114,7 @@ class PortalExaminationModel extends Model
      * @param string $examPoints
      * @return $this
      */
-    public function adminEditExam($data, $categories,$examPoints)
+    public function adminEditExam($data, $categories)
     {
 
         unset($data['user_id']);
@@ -148,14 +145,9 @@ class PortalExaminationModel extends Model
         if (!empty($newCategoryIds)) {
             $this->categories()->attach(array_values($newCategoryIds));
         }
-
-
         $data['exam_keywords'] = str_replace('，', ',', $data['exam_keywords']);
-        $examPoints = str_replace('，', ',', $examPoints);
         $keywords = explode(',', $data['exam_keywords']);
-        $examPoints = explode(',', $examPoints);
         $this->addTags($keywords, $data['id']);
-        $this->addPoints($examPoints,$data['id']);
 
         return $this;
 
@@ -217,7 +209,7 @@ class PortalExaminationModel extends Model
         }
     }
 
-    public function addPoints($examPoints,$examId){
+    /*public function addPoints($examPoints,$examId){
         $data = [];
         if($examPoints){
             $oldPointNames  =  Db::name('portal_point')->where('exam_id='.$examId)->column('point_name');
@@ -241,5 +233,5 @@ class PortalExaminationModel extends Model
         } else {
             Db::name('portal_point')->where('exam_id', $examId)->delete();
         }
-    }
+    }*/
 }

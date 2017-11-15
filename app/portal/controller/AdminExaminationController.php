@@ -108,7 +108,7 @@ class AdminExaminationController extends AdminBaseController
                 }
             }
 
-            $portalExaminationModel->adminAddExam($data['exam'], $data['exam']['categories'],$data['exam_points']);
+            $portalExaminationModel->adminAddExam($data['exam'], $data['exam']['categories']);
 
             $this->success('添加成功!', url('AdminExamination/edit', ['id' => $portalExaminationModel->id]));
         }
@@ -178,7 +178,7 @@ class AdminExaminationController extends AdminBaseController
                     array_push($data['exam']['more']['files'], ["url" => $fileUrl, "name" => $data['file_names'][$key]]);
                 }
             }
-            $portalExaminationModel->adminEditExam($data['exam'], $data['exam']['categories'],$data['exam_points']);
+            $portalExaminationModel->adminEditExam($data['exam'], $data['exam']['categories']);
 
             $this->success('保存成功!');
 

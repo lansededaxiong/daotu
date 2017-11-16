@@ -6,8 +6,18 @@
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
-// | Author: 老猫 <thinkcmf@126.com>
+// | Author: 小夏 < 449134904@qq.com>
 // +----------------------------------------------------------------------
-return [
-    'ACCEPT' => '接 受'
-];
+namespace app\portal\validate;
+
+use think\Validate;
+
+class PortalExamSetValidate extends Validate
+{
+    protected $rule = [
+        'name' => 'require',
+    ];
+    protected $message = [
+        'name.require' => '套题名称不能为空',
+    ];
+}

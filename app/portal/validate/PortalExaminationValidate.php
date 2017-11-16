@@ -16,9 +16,11 @@ class PortalExaminationValidate extends Validate
 {
     protected $rule = [
         'exam_title' => 'require',
+        'set_id'     => 'require',
     ];
     protected $message = [
         'exam_title.require' => '试题标题不能为空',
+        'set_id.require'     => '请选择所属套题',
     ];
 
     protected $scene = [

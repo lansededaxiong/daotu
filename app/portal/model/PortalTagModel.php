@@ -18,4 +18,6 @@ class PortalTagModel extends Model
         0=>"未启用",
         1=>"已启用",
     );
+    // 开启自动写入时间戳字段
+    protected $autoWriteTimestamp = true;
 }

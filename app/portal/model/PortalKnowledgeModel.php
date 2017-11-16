@@ -78,7 +78,7 @@ class PortalKnowledgeModel extends Model
         foreach ($knowledges as $item) {
             $item['checked'] = in_array($item['id'], $currentIds) ? "checked" : "";
             $item['url']     = cmf_url('portal/List/index', ['id' => $item['id']]);;
-            $item['str_action'] = '<a href="' . url("AdminKnowledge/add", ["parent" => $item['id']]) . '">添加子分类</a> | <a href="' . url("AdminKnowledge/edit", ["id" => $item['id']]) . '">' . lang('EDIT') . '</a> | <a class="js-ajax-delete" href="' . url("AdminKnowledge/delete", ["id" => $item['id']]) . '">' . lang('DELETE') . '</a> ';
+            $item['str_action'] = '<a href="' . url("AdminKnowledge/add", ["parent" => $item['id']]) . '">添加子知识点</a> | <a href="' . url("AdminKnowledge/edit", ["id" => $item['id']]) . '">' . lang('EDIT') . '</a> | <a class="js-ajax-delete" href="' . url("AdminKnowledge/delete", ["id" => $item['id']]) . '">' . lang('DELETE') . '</a> ';
             array_push($newKnowledges, $item);
         }
 
@@ -88,7 +88,7 @@ class PortalKnowledgeModel extends Model
             $tpl = "<tr>
                         <td><input name='list_orders[\$id]' type='text' size='3' value='\$list_order' class='input-order'></td>
                         <td>\$id</td>
-                        <td>\$spacer <a href='\$url' target='_blank'>\$name</a></td>                      
+                        <td>\$spacer\$name</td>                      
                         <td>\$str_action</td>
                     </tr>";
         }

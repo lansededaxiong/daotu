@@ -7,12 +7,20 @@
         <li><a href="{:url('AdminExamination/add')}">添加试题</a></li>
     </ul>
     <form class="well form-inline margin-top-20" method="post" action="{:url('AdminExamination/index')}">
-        分类:
+        所属章节:
         <select class="form-control" name="category" style="width: 140px;">
             <option value='0'>全部</option>
             {$category_tree|default=''}
         </select> &nbsp;&nbsp;
-        时间:
+        所属套题:
+        <select class="form-control" name="set" style="width: 147px;">
+            <option value="0">请选择所属套题</option>
+            <volist name="examSets" id="vo">
+                <php>$selected = $set == $vo['id'] ? 'selected' : '';</php>
+                <option {$selected} value="{$vo.id}">{$vo.name}</option>
+            </volist>
+        </select>
+        &nbsp;&nbsp;时间:
         <input type="text" class="form-control js-bootstrap-datetime" name="start_time"
                value="{$start_time|default=''}"
                style="width: 140px;" autocomplete="off">-
@@ -70,7 +78,7 @@
                 <th>标题</th>
                 <th width="50">作者</th>
                 <th width="65">点击量</th>
-                <th width="160">关键字</th>
+                <th width="160">标签</th>
                 <th width="130">更新时间</th>
                 <th width="130">发布时间</th>
                 <th width="70">状态</th>
@@ -92,10 +100,10 @@
                     <td><b>{$vo.id}</b></td>
                     <td>
                         <notempty name="category">
-                            <a href="{:cmf_url('portal/Examination/index',array('id'=>$vo['id'],'cid'=>$vo['category_id']))}"
+                            <a href="{:cmf_url('Examination/detail',array('id'=>$vo['id'],'cid'=>$vo['category_id']))}"
                                target="_blank">{$vo.exam_title}</a>
                             <else/>
-                            <a href="{:cmf_url('portal/Examination/index',array('id'=>$vo['id']))}"
+                            <a href="{:cmf_url('Examination/detail',array('id'=>$vo['id']))}"
                                target="_blank">{$vo.exam_title}</a>
                         </notempty>
                     </td>
@@ -156,7 +164,7 @@
                 <th>标题</th>
                 <th width="50">作者</th>
                 <th width="65">点击量</th>
-                <th width="160">关键字</th>
+                <th width="160">标签</th>
                 <th width="130">更新时间</th>
                 <th width="130">发布时间</th>
                 <th width="70">状态</th>

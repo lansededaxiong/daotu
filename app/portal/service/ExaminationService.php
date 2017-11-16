@@ -36,6 +36,7 @@ class ExaminationService
         $field = 'e.*,u.user_login,u.user_nickname,u.user_email';
 
         $category = empty($filter['category']) ? 0 : intval($filter['category']);
+
         if (!empty($category)) {
             $portalCategoryModel = new PortalCategoryModel();
             $categoryIds = $portalCategoryModel->where('parent_id='.$category)->column('id');
@@ -50,6 +51,9 @@ class ExaminationService
             ]);
             $field = 'e.*,b.id AS exam_category_id,b.list_order,b.category_id,u.user_login,u.user_nickname,u.user_email';
         }
+
+        $set = empty($filter['set']) ? 0 : intval($filter['set']);
+        if (!empty($set)) $where['e.set_id'] = ['eq', $set];
 
         $startTime = empty($filter['start_time']) ? 0 : strtotime($filter['start_time']);
         $endTime   = empty($filter['end_time']) ? 0 : strtotime($filter['end_time']);

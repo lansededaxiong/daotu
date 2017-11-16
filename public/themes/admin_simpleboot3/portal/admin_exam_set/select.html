@@ -1,0 +1,66 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+    <table class="table table-hover table-bordered table-list">
+        <thead>
+        <tr>
+            <th width="50">ID</th>
+            <th>标题</th>
+            <th width="130">更新时间</th>
+            <th width="130">发布时间</th>
+            <th width="70">状态</th>
+        </tr>
+        </thead>
+        <foreach name="examinations" item="vo">
+            <tr>
+                <td><b>{$vo.id}</b></td>
+                <td>{$vo.exam_title}</td>
+                <td>
+                    <notempty name="vo.update_time">
+                        {:date('Y-m-d H:i',$vo['update_time'])}
+                    </notempty>
+
+                </td>
+                <td>
+                    <empty name="vo.published_time">
+                        未发布
+                        <else/>
+                        {:date('Y-m-d H:i',$vo['published_time'])}
+                    </empty>
+
+                </td>
+                <td>
+                    <notempty name="vo.exam_status">
+                        <a data-toggle="tooltip" title="已发布"><i class="fa fa-check"></i></a>
+                        <else/>
+                        <a data-toggle="tooltip" title="未发布"><i class="fa fa-close"></i></a>
+                    </notempty>
+                    <notempty name="vo.is_top">
+                        <a data-toggle="tooltip" title="已置顶"><i class="fa fa-arrow-up"></i></a>
+                        <else/>
+                        <a data-toggle="tooltip" title="未置顶"><i class="fa fa-arrow-down"></i></a>
+                    </notempty>
+                    <notempty name="vo.recommended">
+                        <a data-toggle="tooltip" title="已推荐"><i class="fa fa-thumbs-up"></i></a>
+                        <else/>
+                        <a data-toggle="tooltip" title="未推荐"><i class="fa fa-thumbs-down"></i></a>
+                    </notempty>
+                </td>
+            </tr>
+        </foreach>
+        <tfoot>
+        <tr>
+            <th width="50">ID</th>
+            <th>标题</th>
+            <th width="130">更新时间</th>
+            <th width="130">发布时间</th>
+            <th width="70">状态</th>
+        </tr>
+        </tfoot>
+    </table>
+    <ul class="pagination">{$page|default=''}</ul>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

@@ -38,8 +38,7 @@
                     <tr>
                         <th>内容</th>
                         <td>
-                            <textarea id="preview" name="point[point_content]" class="form-control" rows="5" style="display: none;" >{$point.point_content}</textarea>
-                            <iframe id="mathEditorFrame" src="__TMPL__/public/assets/MathEditor/index.html?exam_id={$point.id}"></iframe>
+
                         </td>
                     </tr>
                     <tr>
@@ -65,16 +64,7 @@
 </div>
 <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
 <script type="text/javascript">
-    $(function () {
-        var exam_content =  $("#preview").val();
-        var key = "{$point.id}";
-        sessionStorage.setItem('point_' + key,null); // 存入一个值
-        sessionStorage.setItem('point_' + key,exam_content); // 存入一个值
-        $(".btn").click(function(){
-            console.log(loadMathEditor('mathEditorFrame'));
-            $("#preview").val(loadMathEditor('mathEditorFrame'));
-        });
-    });
+
     function doSelectCategory() {
         var selectedKnowledgesId = $('#js-knowledges-id-input').val();
         openIframeLayer("{:url('AdminKnowledge/select')}?ids=" + selectedKnowledgesId, '请选择分类', {

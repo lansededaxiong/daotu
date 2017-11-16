@@ -1,5 +1,16 @@
 function loadMathEditor(id) {
-    return $("#"+id).contents().find("#MathEditor").html()
+    //return $("#"+id).contents().find("#MathEditor").html()
+    var contents = $("#"+id).contents().find("#MathEditor").html();
+    var lis = contents.split("</script>");
+    var retlis ="";
+    for(var k=0,len = lis.length;k<len;k++){
+        retlis += clearSpan(lis[k])
+    }
+    console.log(retlis);
+    return retlis;
+}
+function clearSpan (str){
+    return str &&  str.replace(/<script.*>.*/g,"");
 }
 MathJax.Hub.Config({asciimath2jax: {delimiters: [['$','$'], ['`','`']]}});
 MathJax.Hub.Register.StartupHook("End Jax",function () {

@@ -37,13 +37,24 @@
             <div class="col-md-9">
                 <table class="table table-bordered">
                     <tr>
-                        <th width="100">分类</th>
+                        <th width="100">所属章节</th>
                         <td>
                             <input class="form-control" type="text" style="width:400px;" required value=""
                                    placeholder="请选择分类" onclick="doSelectCategory();" id="js-categories-name-input"
                                    readonly/>
                             <input class="form-control" type="hidden" value="" name="exam[categories]"
                                    id="js-categories-id-input"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>所属套题<span class="form-required">*</span></th>
+                        <td>
+                            <select class="form-control" name="exam[set_id]" id="input-set">
+                                <option value="">请选择所属套题</option>
+                                <volist name="examSets" id="vo">
+                                    <option value="{$vo.id}">{$vo.name}</option>
+                                </volist>
+                            </select>
                         </td>
                     </tr>
                     <tr>
@@ -54,26 +65,19 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>关键词</th>
+                        <th>标签</th>
                         <td>
                             <input class="form-control" type="text" name="exam[exam_keywords]" id="keywords" value=""
-                                   placeholder="请输入关键字">
-                            <p class="help-block">多关键词之间用英文逗号隔开</p>
+                                   placeholder="请输入标签">
+                            <p class="help-block">多标签之间用英文逗号隔开</p>
                         </td>
                     </tr>
-                    <tr>
-                        <th>试题埋点</th>
-                        <td>
-                            <input class="form-control" type="text" name="exam_points"
-                                   value="" placeholder="请输入试题埋点">
-                            <p class="help-block">多试题埋点之间用英文逗号隔开</p>
-                        </td>
-                    </tr>
+
                     <tr>
                         <th>内容</th>
                         <td>
-                            <textarea id="preview" name="point[point_content]" class="form-control" rows="5" style="display: none;" ></textarea>
-                            <iframe id="mathEditorFrame" src="__TMPL__/public/assets/MathEditor/index.html?exam_id={$point.id}"></iframe>
+                            <textarea id="preview" name="exam[exam_content]" class="form-control" rows="5" style="display: none;" ></textarea>
+                            <iframe id="mathEditorFrame" src="__TMPL__/public/assets/MathEditor/index.html"></iframe>
                         </td>
                     </tr>
                     <tr>
@@ -88,7 +92,7 @@
                 </table>
                 <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('ADD')}</button>
+                        <button type="submit" id="btn" class="btn btn-primary js-ajax-submit">{:lang('ADD')}</button>
                         <a class="btn btn-default" href="{:url('AdminExamination/index')}">{:lang('BACK')}</a>
                     </div>
                 </div>
@@ -150,22 +154,10 @@
     </form>
 </div>
 <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
-<!--<script type="text/javascript">
-    //编辑器路径定义
-    var editorURL = GV.WEB_ROOT;
-</script>
-<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.config.js"></script>
-<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.all.min.js"></script>-->
 <script type="text/javascript">
     $(function () {
 
-       /* editorcontent = new baidu.editor.ui.Editor();
-        editorcontent.render('content');
-        try {
-            editorcontent.sync();
-        } catch (err) {
-        }*/
-        $(".btn").click(function(){
+        $("#btn").click(function(){
             console.log(loadMathEditor('mathEditorFrame'));
             $("#preview").val(loadMathEditor('mathEditorFrame'));
         });

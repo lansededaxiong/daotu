@@ -1,0 +1,43 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap js-check-wrap">
+	<ul class="nav nav-tabs">
+		<li><a href="{:url('AdminExamSet/index')}">套题管理</a></li>
+		<li class="active"><a href="{:url('AdminExamSet/add')}">新增套题</a></li>
+		<li><a  href="{:url('AdminExamSet/edit')}" >编辑套题</a></li>
+	</ul>
+	<form method="post" class="form-horizontal js-ajax-form margin-top-20" action="{:url('AdminExamSet/addExamSet')}">
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label"><span class="form-required">*</span>套题名称:</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" name="exam_set[name]" value="">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">状态:</label>
+			<div class="col-md-6 col-sm-10">
+				<select name="exam_set[status]" class="form-control">
+					<foreach name="arrStatus" key="k" item="vo">
+						<option value="{$k}" >{$vo}</option>
+					</foreach>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label"><span class="form-required">*</span>排序:</label>
+			<div class="col-md-6 col-sm-10">
+				<input type="text" class="form-control" name="exam_set[list_order]" value="">
+			</div>
+		</div>
+		<div class="col-sm-offset-2 col-sm-10">
+			<button type="submit" class="btn btn-primary js-ajax-submit">{:lang("SAVE")}</button>
+			<a class="btn btn-default" href="../../../../index.php">返回</a>
+		</div>
+	</form>
+
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

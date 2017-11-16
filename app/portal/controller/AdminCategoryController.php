@@ -20,15 +20,15 @@ use app\admin\model\ThemeModel;
 class AdminCategoryController extends AdminBaseController
 {
     /**
-     * 分类列表
+     * 章节列表
      * @adminMenu(
-     *     'name'   => '分类管理',
+     *     'name'   => '章节管理',
      *     'parent' => 'portal/AdminIndex/default',
      *     'display'=> true,
      *     'hasView'=> true,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '分类列表',
+     *     'remark' => '章节列表',
      *     'param'  => ''
      * )
      */
@@ -42,15 +42,15 @@ class AdminCategoryController extends AdminBaseController
     }
 
     /**
-     * 添加分类
+     * 添加章节
      * @adminMenu(
-     *     'name'   => '添加分类',
+     *     'name'   => '添加章节',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> true,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '添加文章分类',
+     *     'remark' => '添加文章章节',
      *     'param'  => ''
      * )
      */
@@ -71,15 +71,15 @@ class AdminCategoryController extends AdminBaseController
     }
 
     /**
-     * 添加分类提交
+     * 添加章节提交
      * @adminMenu(
-     *     'name'   => '添加分类提交',
+     *     'name'   => '添加章节提交',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> false,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '添加分类提交',
+     *     'remark' => '添加章节提交',
      *     'param'  => ''
      * )
      */
@@ -106,7 +106,7 @@ class AdminCategoryController extends AdminBaseController
     }
 
     /**
-     * 编辑分类
+     * 编辑章节
      * @adminMenu(
      *     'name'   => '编辑分类',
      *     'parent' => 'index',
@@ -114,7 +114,7 @@ class AdminCategoryController extends AdminBaseController
      *     'hasView'=> true,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '编辑分类',
+     *     'remark' => '编辑章节',
      *     'param'  => ''
      * )
      */
@@ -147,15 +147,15 @@ class AdminCategoryController extends AdminBaseController
     }
 
     /**
-     * 编辑文章分类提交
+     * 编辑文章章节提交
      * @adminMenu(
-     *     'name'   => '编辑分类提交',
+     *     'name'   => '编辑章节提交',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> false,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '编辑分类提交',
+     *     'remark' => '编辑章节提交',
      *     'param'  => ''
      * )
      */
@@ -183,13 +183,13 @@ class AdminCategoryController extends AdminBaseController
     /**
      * 文章分类选择对话框
      * @adminMenu(
-     *     'name'   => '分类选择对话框',
+     *     'name'   => '章节选择对话框',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> true,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '分类选择对话框',
+     *     'remark' => '章节选择对话框',
      *     'param'  => ''
      * )
      */
@@ -222,15 +222,15 @@ tpl;
     }
 
     /**
-     * 文章分类排序
+     * 文章章节排序
      * @adminMenu(
-     *     'name'   => '分类排序',
+     *     'name'   => '章节排序',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> false,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '分类排序',
+     *     'remark' => '章节排序',
      *     'param'  => ''
      * )
      */
@@ -241,15 +241,15 @@ tpl;
     }
 
     /**
-     * 删除文章分类
+     * 删除文章章节
      * @adminMenu(
-     *     'name'   => '删除分类',
+     *     'name'   => '删除章节',
      *     'parent' => 'index',
      *     'display'=> false,
      *     'hasView'=> false,
      *     'order'  => 10000,
      *     'icon'   => '',
-     *     'remark' => '删除文章分类',
+     *     'remark' => '删除文章章节',
      *     'param'  => ''
      * )
      */
@@ -261,19 +261,19 @@ tpl;
         $findCategory = $portalCategoryModel->where('id', $id)->find();
 
         if (empty($findCategory)) {
-            $this->error('分类不存在!');
+            $this->error('章节不存在!');
         }
 
         $categoryChildrenCount = $portalCategoryModel->where('parent_id', $id)->count();
 
         if ($categoryChildrenCount > 0) {
-            $this->error('此分类有子类无法删除!');
+            $this->error('此章节有子章节无法删除!');
         }
 
-        $categoryPostCount = Db::name('portal_category_post')->where('category_id', $id)->count();
+        $categoryPostCount = Db::name('portal_category_exam')->where('category_id', $id)->count();
 
         if ($categoryPostCount > 0) {
-            $this->error('此分类有文章无法删除!');
+            $this->error('此章节有试题无法删除!');
         }
 
         $data   = [

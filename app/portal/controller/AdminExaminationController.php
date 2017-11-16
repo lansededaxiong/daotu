@@ -36,7 +36,7 @@ class AdminExaminationController extends AdminBaseController
         $param = $this->request->param();
 
         $categoryId = $this->request->param('category', 0, 'intval');
-
+        $setId = $this->request->param('set', 0, 'intval');
         $examService = new ExaminationService();
         $data        = $examService->adminExaminationList($param);
 
@@ -51,8 +51,11 @@ class AdminExaminationController extends AdminBaseController
         $this->assign('examinations', $data->items());
         $this->assign('category_tree', $categoryTree);
         $this->assign('category', $categoryId);
+        $this->assign('set', $setId);
         $this->assign('page', $data->render());
 
+        $examSets = $this->_getExamSet();             //获取所有有效套题列表
+        $this->assign('examSets',$examSets);
         return $this->fetch();
     }
 
@@ -71,6 +74,8 @@ class AdminExaminationController extends AdminBaseController
      */
     public function add()
     {
+        $examSets = $this->_getExamSet();            //获取所有有效套题列表
+        $this->assign('examSets',$examSets);
         return $this->fetch();
     }
 
@@ -131,7 +136,6 @@ class AdminExaminationController extends AdminBaseController
     public function edit()
     {
         $id = $this->request->param('id', 0, 'intval');
-
         $portalExaminationModel = new PortalExaminationModel();
         $exam            = $portalExaminationModel->where('id', $id)->find();
         $examCategories  = $exam->categories()->alias('e')->column('e.name', 'e.id');
@@ -140,7 +144,8 @@ class AdminExaminationController extends AdminBaseController
         $this->assign('exam', $exam);
         $this->assign('post_categories', $examCategories);
         $this->assign('post_category_ids', $examCategoryIds);
-
+        $examSets = $this->_getExamSet();   //获取所有有效套题列表
+        $this->assign('examSets',$examSets);
         return $this->fetch();
     }
 
@@ -184,7 +189,17 @@ class AdminExaminationController extends AdminBaseController
 
         }
     }
-
+    /**
+     * 获取所有套题信息
+     */
+    public function _getExamSet(){
+        $where = [
+            'create_time' => ['>=', 0],
+            'delete_time' => 0,
+            'status'      => 1
+        ];
+        return  Db::name('portal_exam_set')->field('id,name')->where($where)->select();
+    }
     /**
      * 试题删除
      * @adminMenu(

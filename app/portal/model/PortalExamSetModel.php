@@ -6,7 +6,18 @@
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
-// | Author: 老猫 <thinkcmf@126.com>
+// | Author:kane < chengjin005@163.com>
 // +----------------------------------------------------------------------
-return [];
+namespace app\portal\model;
 
+use think\Model;
+
+class PortalExamSetModel extends Model
+{
+    public static   $STATUS = array(
+        0=>"未启用",
+        1=>"已启用",
+    );
+    // 开启自动写入时间戳字段
+    protected $autoWriteTimestamp = true;
+}

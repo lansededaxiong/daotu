@@ -40,7 +40,7 @@
             <div class="col-md-9">
                 <table class="table table-bordered">
                     <tr>
-                        <th width="100">分类</th>
+                        <th width="100">所属章节</th>
                         <td>
                             <input class="form-control" type="text" style="width:400px;" required
                                    value="{:implode(' ',$post_categories)}"
@@ -52,6 +52,18 @@
                         </td>
                     </tr>
                     <tr>
+                        <th>所属套题<span class="form-required">*</span></th>
+                        <td>
+                            <select class="form-control" name="exam[set_id]" id="input-set">
+                                <option value="">请选择所属套题</option>
+                                <volist name="examSets" id="vo">
+                                    <php>$selected = $exam['set_id'] == $vo['id'] ? 'selected' : '';</php>
+                                    <option {$selected} value="{$vo.id}">{$vo.name}</option>
+                                </volist>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
                         <th>标题<span class="form-required">*</span></th>
                         <td>
                             <input type="hidden" name="exam[id]" value="{$exam.id}">
@@ -60,11 +72,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>关键词</th>
+                        <th>标签</th>
                         <td>
                             <input class="form-control" type="text" name="exam[exam_keywords]"
-                                   value="{$exam['exam_keywords']}" placeholder="请输入关键字">
-                            <p class="help-block">多关键词之间用英文逗号隔开</p>
+                                   value="{$exam['exam_keywords']}" placeholder="请输入标签">
+                            <p class="help-block">多标签之间用英文逗号隔开</p>
                         </td>
                     </tr>
                     <tr>
@@ -172,29 +184,26 @@
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary js-ajax-submit">{:lang('SAVE')}</button>
-                <a id="btn" class="btn btn-default" href="javascript:history.back(-1);">{:lang('BACK')}</a>
+                <button type="submit"  id="btn"  class="btn btn-primary js-ajax-submit">{:lang('SAVE')}</button>
+                <a class="btn btn-default" href="javascript:history.back(-1);">{:lang('BACK')}</a>
             </div>
         </div>
     </form>
 </div>
 <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
 <script type="text/javascript">
-    function clearSpan (str){
-        return str &&  str.replace(/<span.*>.*/g,"")
-    }
+
     $(function () {
-        $("#btn").click(function(){
-            var exam_content =  $("#preview").val();
-            var lis = exam_content.split("</span>");
-            var retlis ="";
-            for(var k=0,len = lis.length;k<len;k++){
-                retlis += clearSpan(lis[k])
-            }
-            console.log(retlis);
+        var exam_content =  $("#preview").val();
+
+        if(exam_content){
             var key = "{$exam.id}";
             sessionStorage.setItem('exam_' + key,null); // 存入一个值
-            sessionStorage.setItem('exam_' + key,retlis); // 存入一个值
+            sessionStorage.setItem('exam_' + key,exam_content); // 存入一个值
+        }
+
+        $("#btn").click(function(){
+
             $("#preview").val(loadMathEditor('mathEditorFrame'));
         });
 

@@ -36,7 +36,7 @@ class AdminTagController extends AdminBaseController
     public function index()
     {
         $portalTagModel = new PortalTagModel();
-        $tags           = $portalTagModel->paginate();
+        $tags           = $portalTagModel->where('create_time > 0 AND delete_time=0')->paginate();
 
         $this->assign("arrStatus", $portalTagModel::$STATUS);
         $this->assign("tags", $tags);
@@ -133,15 +133,34 @@ class AdminTagController extends AdminBaseController
      */
     public function delete()
     {
-        $intId = $this->request->param("id", 0, 'intval');
-
-        if (empty($intId)) {
-            $this->error(lang("NO_ID"));
-        }
+        $id = $this->request->param('id');
         $portalTagModel = new PortalTagModel();
+        //获取删除的内容
+        $findTag = $portalTagModel->field('id,name')->where('id', $id)->find();
+        if (empty($findTag)) {
+            $this->error('标签不存在!');
+        }
 
-        $portalTagModel->where(['id' => $intId])->delete();
-        Db::name('portal_tag_exam')->where('tag_id', $intId)->delete();
-        $this->success(lang("DELETE_SUCCESS"));
+        $tagCount = Db::name('portal_tag_exam')->where('tag_id', $id)->count();
+
+        if ($tagCount > 0) {
+            $this->error('此标签还有试题在使用，无法删除!');
+        }
+
+        $data   = [
+            'object_id'   => $findTag['id'],
+            'create_time' => time(),
+            'table_name'  => 'portal_tag',
+            'name'        => $findTag['name']
+        ];
+        $result = $portalTagModel
+            ->where('id', $id)
+            ->update(['delete_time' => time()]);
+        if ($result) {
+            Db::name('recycleBin')->insert($data);
+            $this->success('删除成功!');
+        } else {
+            $this->error('删除失败');
+        }
     }
 }

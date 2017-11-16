@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="css/matheditor.css" rel="stylesheet">
+<title>MyEditor</title>
+<script src="js/jquery-1.11.3.js"></script>
+<script type="text/javascript" async src="MathJax/MathJax.js?config=AM_CHTML,Safe&locale=zh-hans"></script>
+</head>
+<body>
+
+<div id="MathEditorTools">
+    <ul class="clearfix">
+        <li><a href="javascript:editorInsert('|...|');" class="math-start" title="插入数学式,在美元符号内直接写公式，完成后按 Ctl + Enter 键">|...|</a></li>
+        <li><a href="javascript:editorInsert('x / y ');" title="x/y" class="fengshi-menu">`x/y`</a></li>
+        <li>
+            <div class="btn-group">
+                <button type="button" style="font-size: 18px; padding:10px;" id="dropdown_m1" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                    √ &nbsp;<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown_m1">
+                    <li><a href="javascript:editorInsert('sqrt( )');" title="根号">`sqrt(x)`</a></li>
+                    <li><a href="javascript:editorInsert('root(n)(x) ');" title="root(n)(x)">`root(n)(x)`</a></li>
+                </ul>
+            </div>
+        </li>
+        <li>
+            <div class="btn-group">
+                <button type="button" style="font-size: 18px; padding:10px;" id="dropdown_m2" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                    `x_m^n` &nbsp;<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown_m2">
+                    <li><a href="javascript:editorInsert('x^2 ');" title="x^2">`x^2`</a></li>
+                    <li><a href="javascript:editorInsert('x^3 ');" title="x^2">`x^3`</a></li>
+                    <li style="padding: 6px;"><a href="javascript:editorInsert('x^n ');" title="x^n">`x^n`</a></li>
+                    <li style="padding: 6px;"><a href="javascript:editorInsert('e^x ');" title="x^n">`e^x`</a></li>
+                    <li style="padding: 6px;"><a href="javascript:editorInsert('x_n ');" title="x^n">`x_n`</a></li>
+                    <li><a href="javascript:editorInsert('x\' ');" title="x'">`x'`</a></li>
+                    <li><a href="javascript:editorInsert('x_(m)^(n) ');" title="x^n">`x_m^n`</a></li>
+                </ul>
+            </div>
+        </li>
+        <li>
+            <div class="btn-group">
+                <button type="button" style="font-size: 12px;" id="dropdown_m3" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                    `int` &nbsp;<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown_m3">
+                    <li><a href="javascript:editorInsert('int f(x)dx ');" title="int f(x)dx" style="font-size: 12px;">`int f(x)dx`</a></li>
+                    <li><a href="javascript:editorInsert('int_(n)^(m)f(x)dx ');" title="int_(n)^(m)f(x)dx" style="font-size: 12px;">`int_n^mf(x)dx`</a></li>
+                </ul>
+            </div>
+        </li>
+        <li>
+            <div class="btn-group">
+                <button type="button" style="font-size: 12px; padding: 12px 10px;" id="dropdown_m4" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                    `sum` &nbsp;<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown_m4">
+                    <li><a href="javascript:editorInsert('f(y)=sum f(x) ');" title="f(x)=sum f(x)" style="font-size: 12px;">`sum f(x)`</a></li>
+                    <li><a href="javascript:editorInsert('f(y)=sum_(n=0) f(x) ');" title="f(y)=sum_(n=0) f(x)" style="font-size: 12px;">`sum_(n=0) f(x)`</a></li>
+                    <li><a href="javascript:editorInsert('f(y)=sum_(n=0)^(oo) f(x) ');" title="f(y)=sum_(n=0)^(oo) f(x)" style="font-size: 12px;">`sum_(n=0)^(oo) f(x)`</a></li>
+                </ul>
+            </div>
+        </li>
+        <li>
+            <div class="btn-group">
+                <button type="button" style="font-size: 23px; padding: 7px 10px;" id="dropdown_m5" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                    `{` &nbsp;<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown_m5">
+                    <li><a href="javascript:editorInsert('{ f(x) } ');" title="{ f(x) }" style="font-size: 16px;">`{ f(x) }`</a></li>
+                    <li><a href="javascript:editorInsert('f(n)={(f(x), x!=0),(f(y), y=0) :} ');" title="f(n)={(f(x), x!=0),(f(y), y=0):}" style="font-size: 12px;">`{(f(x), x!=0),(f(y), y=0):}`</a></li>
+                    <li><a href="javascript:editorInsert('f(n)={(f(x), x!=0),(f(y), y=0),(f(z), z=0) :}');" title="f(n)={(f(x), x!=0),(f(y), y=0),(f(z), z=0) :}" style="font-size: 12px;">`{(f(x), x!=0),(f(y), y=0),(f(z), z=0) :}`</a></li>
+                    <li><a href="javascript:editorInsert('f(n)=( (f( x )), (f( y )) ) ');" title="f(n)=( (f( x )), (f( y )) )" style="font-size: 12px;">`( (f( x )), (f( y )) )`</a></li>
+                </ul>
+            </div>
+        </li>
+        <li>
+            <div class="btn-group">
+                <button type="button" style="font-size: 16px;" id="dropdown_m6" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                    `lim_( n->oo )` &nbsp;<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown_m6">
+                    <li><a href="javascript:editorInsert('lim_( n->oo ) f(x) ');" title="lim_(n->oo)f(x)" style="font-size: 14px;">`lim_(n->oo)f(x)`</a></li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+    <ul class="clearfix">
+        <li>
+            <div class="btn-group">
+                <button type="button" id="dropdown_m7" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                    `log` &nbsp;<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown_m7">
+                    <li><a href="javascript:editorInsert('log f(x) ');" title="log f(x)" style="font-size: 16px;">`log f(x)`</a></li>
+                    <li><a href="javascript:editorInsert('log_(n) f(x) ');" title="log_n f(x)" style="font-size: 16px;">`log_n f(x)`</a></li>
+                    <li><a href="javascript:editorInsert('ln f(x) ');" title="ln f(x)" style="font-size: 16px;">`ln f(x)`</a></li>
+                </ul>
+            </div>
+        </li>
+        <li>
+            <div class="btn-group">
+                <button type="button" id="dropdown_m8" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                    运算符 &nbsp;<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown_m8">
+                    <li><a href="javascript:editorInsert('+ ');" title="+">`+`</a></li>
+                    <li><a href="javascript:editorInsert('- ');" title="-">`-`</a></li>
+                    <li><a href="javascript:editorInsert('+- ');" title="+-">`+-`</a></li>
+                    <li><a href="javascript:editorInsert('xx ');" title="xx">`xx`</a></li>
+                    <li><a href="javascript:editorInsert('-: ');" title="-:">`-:`</a></li>
+                </ul>
+            </div>
+        </li>
+        <li>
+            <div class="btn-group">
+                <button type="button" id="dropdown_m9" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                    特殊符 &nbsp;<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown_m9">
+                    <li><a href="javascript:editorInsert('pi ');" title="pi">`pi`</a></li>
+                    <li><a href="javascript:editorInsert('oo ');" title="oo">`oo`</a></li>
+                    <li><a href="javascript:editorInsert('O/ ');" title="O/">`O/`</a></li>
+                    <li><a href="javascript:editorInsert('nn ');" title="nn">`nn`</a></li>
+                    <li><a href="javascript:editorInsert('uu ');" title="uu">`uu`</a></li>
+                    <li><a href="javascript:editorInsert('sub ');" title="sub">`sub`</a></li>
+                    <li><a href="javascript:editorInsert('sup ');" title="sup">`sup`</a></li>
+                    <li><a href="javascript:editorInsert('sube ');" title="sube">`sube`</a></li>
+                    <li><a href="javascript:editorInsert('supe ');" title="supe">`supe`</a></li>
+                    <li><a href="javascript:editorInsert('~~ ');" title="~~">`~~`</a></li>
+                    <li><a href="javascript:editorInsert('alpha ');" title="alpha">`alpha`</a></li>
+                    <li><a href="javascript:editorInsert('beta ');" title="beta">`beta`</a></li>
+                    <li><a href="javascript:editorInsert('chi ');" title="chi">`chi`</a></li>
+                    <li><a href="javascript:editorInsert('delta ');" title="delta">`delta`</a></li>
+                    <li><a href="javascript:editorInsert('theta ');" title="theta">`theta`</a></li>
+                    <li><a href="javascript:editorInsert('epsilon ');" title="epsilon">`epsilon`</a></li>
+                    <li><a href="javascript:editorInsert('eta ');" title="eta">`eta`</a></li>
+                    <li><a href="javascript:editorInsert('gamma ');" title="gamma">`gamma`</a></li>
+                    <li><a href="javascript:editorInsert('lambda ');" title="lambda">`lambda`</a></li>
+                    <li><a href="javascript:editorInsert('omega ');" title="omega">`omega`</a></li>
+                    <li><a href="javascript:editorInsert('Delta ');" title="Delta">`Delta`</a></li>
+                </ul>
+            </div>
+        </li>
+        <li>
+            <div class="btn-group">
+                <button type="button" id="dropdown_m10" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                    其他 &nbsp;<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown_m10">
+                    <li><a href="javascript:editorInsert('min_(n) f(x)');" title="min_n f(x)" style="font-size: 16px;">`min_n f(x)`</a></li>
+                    <li><a href="javascript:editorInsert('max_(n) f(x)');" title="max_n f(x)" style="font-size: 16px;">`max_n f(x)`</a></li>
+                </ul>
+            </div>
+        </li>
+        <li>
+            <div class="btn-group">
+                <button type="button" id="dropdown_m11" class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                    字体 &nbsp;<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown_m11">
+                    <li><a href="javascript:;" class="color" title="字体颜色"><b>A</b></a></li>
+                    <li><a href="javascript:Black();" title="加粗"><b>B</b></a></li>
+                    <li><a href="javascript:Italic();" title="斜体"><i><b>I</b></i></a></li>
+                    <li><a href="javascript:UnderLine();" title="下划线"><u><b>U</b></u></a></li>
+                    <li><a href="javascript:Image();" title="图片"><img src="images/image.png" style="height: 20px; vertical-align: middle;"/></a></li>
+                    <li><a href="javascript:Link();" title="超链"><img src="images/link.png" style="height: 20px; vertical-align: middle;"/></a></li>
+                </ul>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div contenteditable="true" id="MathEditor" style="height: 390px;">
+
+</div>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({asciimath2jax: {delimiters: [['$','$'], ['`','`']]}});
+MathJax.Hub.Register.StartupHook("End Jax",function () {
+  var BROWSER = MathJax.Hub.Browser;
+  var canUseMML = (BROWSER.isFirefox && BROWSER.versionAtLeast("1.5")) || (BROWSER.isMSIE    && BROWSER.hasMathPlayer) ||(BROWSER.isSafari  && BROWSER.versionAtLeast("5.0")) ||(BROWSER.isOpera   && BROWSER.versionAtLeast("9.52") && !BROWSER.versionAtLeast("14.0"));
+  var CONFIG = MathJax.Hub.CombineConfig("MMLorHTML",{prefer: { MSIE:"MML", Firefox:"HTML", Opera:"HTML", Chrome:"HTML", Safari:"HTML", other:"HTML"}});
+  var jax = CONFIG.prefer[BROWSER] || CONFIG.prefer.other;
+  if (jax === "HTML") jax = "HTML-CSS"; else if (jax === "MML")  jax = "NativeMML";
+  if (jax === "NativeMML" && !canUseMML) jax = CONFIG.prefer.other;
+  return MathJax.Hub.setRenderer(jax);
+});
+MathJax.Hub.Config({
+    CommonHTML: { linebreaks: { automatic: true } },
+    "HTML-CSS": { linebreaks: { automatic: true }, extensions: ["handle-floats.js"] },
+    SVG: { linebreaks: { automatic: true } },
+    "showMathMenu": false,
+    preview: ["[math]"]
+});
+</script>
+
+<script>
+var knowledge_id = getUrlParam('knowledge_id');
+var knowledge_content = sessionStorage.getItem('knowledge_' + knowledge_id); // => 返回对应的值
+$("#MathEditor").html(knowledge_content);
+//获取url中的参数
+function getUrlParam(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+    var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+    if (r != null) return unescape(r[2]); return null; //返回参数值
+}
+setTimeout(function () {
+    $("#MathEditorTools").show();
+}, 1000);
+</script>
+
+
+
+<script src="bootstrap/plugins/hover-dropdown.min.js"></script>
+<script src="js/default.js"></script>
+</body>
+</html>

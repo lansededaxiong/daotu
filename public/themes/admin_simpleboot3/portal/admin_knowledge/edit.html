@@ -37,7 +37,8 @@
                     <tr>
                         <th>内容</th>
                         <td>
-                            <script type="text/plain" id="content" name="content">{$content}</script>
+                            <textarea id="preview" name="content" class="form-control" rows="5" style="display: none;" >{$content}</textarea>
+                            <iframe id="mathEditorFrame" src="__TMPL__/public/assets/MathEditor/knowledge.html?knowledge_id={$id}"></iframe>
                         </td>
                     </tr>
 
@@ -69,7 +70,7 @@
     </div>
     <div class="form-group" style="margin: 15px;">
         <input type="hidden" name="id" value="{$id}">
-        <button type="submit" class="btn btn-primary js-ajax-submit" data-refresh="0">{:lang('SAVE')}
+        <button type="submit" id="btn" class="btn btn-primary js-ajax-submit" data-refresh="0">{:lang('SAVE')}
         </button>
         <a class="btn btn-default" href="{:url('AdminKnowledge/index')}">{:lang('BACK')}</a>
     </div>
@@ -77,20 +78,21 @@
 </div>
 <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
 <script type="text/javascript">
-    //编辑器路径定义
-    var editorURL = GV.WEB_ROOT;
-</script>
-<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.config.js"></script>
-<script type="text/javascript" src="__STATIC__/js/ueditor/ueditor.all.min.js"></script>
-<script type="text/javascript">
+
     $(function () {
 
-        editorcontent = new baidu.editor.ui.Editor();
-        editorcontent.render('content');
-        try {
-            editorcontent.sync();
-        } catch (err) {
+        var content =  $("#preview").val();
+
+        if(content){
+            var key = "{$id}";
+            sessionStorage.setItem('knowledge_' + key,null); // 存入一个值
+            sessionStorage.setItem('knowledge_' + key,content); // 存入一个值
         }
+
+        $("#btn").click(function(){
+
+            $("#preview").val(loadMathEditor('mathEditorFrame'));
+        });
     });
 </script>
 </body>

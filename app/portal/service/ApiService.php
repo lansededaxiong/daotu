@@ -10,12 +10,98 @@
 // +----------------------------------------------------------------------
 namespace app\portal\service;
 
+use app\portal\model\PortalExaminationModel;
 use app\portal\model\PortalPostModel;
 use app\portal\model\PortalCategoryModel;
 use think\Db;
 
 class ApiService
 {
+    public static function exams($param)
+    {
+        $portalExaminationModel = new PortalExaminationModel();
+
+        $where = [
+            'exam.published_time' => [['> time', 0], ['<', time()]],
+            'exam.exam_status'    => 1,
+            'exam.delete_time'    => 0
+        ];
+
+        $paramWhere = empty($param['where']) ? '' : $param['where'];
+
+        $limit       = empty($param['limit']) ? 10 : $param['limit'];
+        $order       = empty($param['order']) ? '' : $param['order'];
+        $page        = isset($param['page']) ? $param['page'] : false;
+        $relation    = empty($param['relation']) ? '' : $param['relation'];
+        $categoryIds = empty($param['category_ids']) ? '' : $param['category_ids'];
+
+        $join = [
+            ['__USER__ user', 'exam.user_id = user.id'],
+        ];
+
+        if (!empty($categoryIds)) {
+
+            $field = !empty($param['field']) ? $param['field'] : 'exam.*,user.user_login,user.user_nickname,user.user_email,category_exam.category_id';
+            array_push($join, ['__PORTAL_CATEGORY_EXAM__ category_exam', 'exam.id = category_exam.exam_id']);
+
+            if (!is_array($categoryIds)) {
+                $categoryIds = explode(',', $categoryIds);
+            }
+
+            if (count($categoryIds) == 1) {
+                $where['category_exam.category_id'] = $categoryIds[0];
+            } else {
+                $where['category_exam.category_id'] = ['in', $categoryIds];
+            }
+        } else {
+            $field = !empty($param['field']) ? $param['field'] : 'exam.*,user.user_login,user.user_nickname,user.user_email,category_exam.category_id';
+            array_push($join, ['__PORTAL_CATEGORY_EXAM__ category_exam', 'exam.id = category_exam.exam_id']);
+        }
+
+        $examinations = $portalExaminationModel->alias('exam')->field($field)
+            ->join($join)
+            ->where($where)
+            ->where($paramWhere)
+            ->order($order);
+
+        $return = [];
+
+        if (empty($page)) {
+            $examinations = $examinations->limit($limit)->select();
+
+            if (!empty($relation) && !empty($examinations['items'])) {
+                $examinations->load($relation);
+            }
+
+            $return['exams'] = $examinations;
+        } else {
+
+            if (is_array($page)) {
+                if (empty($page['list_rows'])) {
+                    $page['list_rows'] = 10;
+                }
+
+                $examinations = $examinations->paginate($page);
+            } else {
+                $examinations = $examinations->paginate(intval($page));
+            }
+
+            if (!empty($relation) && !empty($examinations['items'])) {
+                $examinations->load($relation);
+            }
+
+            $examinations->appends(request()->param());
+
+            $return['exams']    = $examinations->items();
+            $return['page']        = $examinations->render();
+            $return['total']       = $examinations->total();
+            $return['total_pages'] = $examinations->lastPage();
+        }
+
+
+        return $return;
+
+    }
     /**
      * 功能:查询文章列表,支持分页;<br>
      * 注:此方法查询时关联三个表portal_category_post(category_post),portal_post(post),user;在指定排序(order),指定查询条件(where)最好指定一下表别名

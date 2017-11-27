@@ -1,0 +1,11 @@
+{
+    "name": "试题页",
+    "action": "portal/Examination/index",
+    "description": "试题页模板文件",
+    "order": 10.0,
+    "more": {
+        "vars": {
+
+        }
+    }
+}

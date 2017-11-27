@@ -122,40 +122,38 @@ class ExaminationService
         return $examinations;
     }
 
-/*    //上一篇文章
-    public function publishedPrevArticle($postId, $categoryId = 0)
+    //上一道试题
+    public function publishedPrevExam($examId, $categoryId = 0)
     {
-        $portalPostModel = new PortalPostModel();
+        $portalExamModel = new PortalExaminationModel();
 
         if (empty($categoryId)) {
 
             $where = [
-                'post.post_type'      => 1,
-                'post.published_time' => [['< time', time()], ['> time', 0]],
-                'post.post_status'    => 1,
-                'post.delete_time'    => 0,
-                'post.id '             => ['<',$postId]
+                'exam.published_time' => [['< time', time()], ['> time', 0]],
+                'exam.exam_status'    => 1,
+                'exam.delete_time'    => 0,
+                'exam.id '             => ['<',$examId]
             ];
 
-            $article = $portalPostModel->alias('post')->field('post.*')
+            $exam = $portalExamModel->alias('exam')->field('post.*')
                 ->where($where)
                 ->order('id', 'DESC')
                 ->find();
 
         } else {
             $where = [
-                'post.post_type'       => 1,
-                'post.published_time'  => [['< time', time()], ['> time', 0]],
-                'post.post_status'     => 1,
-                'post.delete_time'     => 0,
+                'exam.published_time'  => [['< time', time()], ['> time', 0]],
+                'exam.exam_status'     => 1,
+                'exam.delete_time'     => 0,
                 'relation.category_id' => $categoryId,
-                'relation.post_id'     => ['<',$postId]
+                'relation.exam_id'     => ['<',$examId]
             ];
 
             $join    = [
-                ['__PORTAL_CATEGORY_POST__ relation', 'post.id = relation.post_id']
+                ['__PORTAL_CATEGORY_EXAM__ relation', 'exam.id = relation.exam_id']
             ];
-            $article = $portalPostModel->alias('post')->field('post.*')
+            $exam = $portalExamModel->alias('exam')->field('exam.*')
                 ->join($join)
                 ->where($where)
                 ->order('id', 'DESC')
@@ -163,51 +161,51 @@ class ExaminationService
         }
 
 
-        return $article;
+        return $exam;
     }
 
-    //下一篇文章
-    public function publishedNextArticle($postId, $categoryId = 0)
+    //下一道试题
+    public function publishedNextExam($examId, $categoryId = 0)
     {
-        $portalPostModel = new PortalPostModel();
+        $portalExamModel = new PortalExaminationModel();
 
         if (empty($categoryId)) {
 
             $where = [
-                'post.post_type'      => 1,
-                'post.published_time' => [['< time', time()], ['> time', 0]],
-                'post.post_status'    => 1,
-                'post.delete_time'    => 0,
-                'post.id'             => ['>',$postId]
+                'exam.published_time' => [['< time', time()], ['> time', 0]],
+                'exam.exam_status'    => 1,
+                'exam.delete_time'    => 0,
+                'exam.id '             => ['>',$examId]
             ];
 
-            $article = $portalPostModel->alias('post')->field('post.*')
+            $exam = $portalExamModel->alias('exam')->field('post.*')
                 ->where($where)
-                ->order('id', 'ASC')
+                ->order('id', 'DESC')
                 ->find();
+
         } else {
             $where = [
-                'post.post_type'       => 1,
-                'post.published_time'  => [['< time', time()], ['> time', 0]],
-                'post.post_status'     => 1,
-                'post.delete_time'     => 0,
+                'exam.published_time'  => [['< time', time()], ['> time', 0]],
+                'exam.exam_status'     => 1,
+                'exam.delete_time'     => 0,
                 'relation.category_id' => $categoryId,
-                'relation.post_id'     => ['>',$postId]
+                'relation.exam_id'     => ['>',$examId]
             ];
 
             $join    = [
-                ['__PORTAL_CATEGORY_POST__ relation', 'post.id = relation.post_id']
+                ['__PORTAL_CATEGORY_EXAM__ relation', 'exam.id = relation.exam_id']
             ];
-            $article = $portalPostModel->alias('post')->field('post.*')
+            $exam = $portalExamModel->alias('exam')->field('exam.*')
                 ->join($join)
                 ->where($where)
-                ->order('id', 'ASC')
+                ->order('id', 'DESC')
                 ->find();
         }
 
 
-        return $article;
-    }*/
+        return $exam;
+
+    }
 
 
 }

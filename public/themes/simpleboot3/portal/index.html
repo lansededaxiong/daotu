@@ -13,19 +13,13 @@
 
 <div class="container">
 
-    <widget name="last_news">
-        <div>
-            <h1 class="text-center">{$widget.title}</h1>
-        </div>
-
+    <widget name="cate_list">
         <div class="row">
-            <?php  $widget["vars"]["last_news_category_id"] = empty($widget["vars"]["last_news_category_id"])?1:$widget["vars"]["last_news_category_id"];?>
-            <portal:exams limit="4" order="exam.published_time DESC"
-                             categoryIds="$widget.vars.last_news_category_id">
-                <h3>
-                    <a href="{:cmf_url('portal/Examination/index',array('id'=>$vo.id,'cid'=>$vo.category_id))}">{$vo.exam_title}</a>
-                </h3>
-            </portal:exams>
+            <volist name="category" id="vo">
+                <p>
+                    <a href="{:cmf_url('portal/List/index',array('cat_id'=>$vo.id))}">{$vo.name}</a>
+                </p>
+            </volist>
         </div>
     </widget>
     <include file="public@footer"/>

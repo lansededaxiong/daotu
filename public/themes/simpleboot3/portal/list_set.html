@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>试题列表</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content="">
+    <include file="public@head"/>
+    <hook name="before_head_end"/>
+    <style>
+        .MJX_Assistive_MathML{display: none}
+    </style>
+</head>
+<body class="body-white">
+<include file="public@nav"/>
+<div class="container">
+    <php>$demo_time=2;</php>
+    <div class="row">
+        <div class="col-md-9">
+            <div class="">
+                <php>
+                    $where=[
+                    'exam.create_time'  =>   ['egt',0]
+                    ];
+                </php>
+                <portal:exams item="vo" where="$where" order="exam.create_time DESC" page="10"
+                                 setIds="{$set.id}"
+                                 returnVarName="exams_data">
+                    <div class="list-boxes">
+                        </h2>
+                        <div>
+                            <div class="pull-left">
+                                <div class="list-actions">
+                                    <p>
+                                        <i>{$key+1}.</i>
+                                        ({$set.name})&nbsp;&nbsp;{$vo.exam_content}
+                                    </p>
+                                </div>
+                            </div>
+                            <a class="btn btn-warning btn-sm pull-right"
+                               href="{:cmf_url('portal/Examination/index',array('id'=>$vo['id']))}">查看更多</a>
+                        </div>
+                    </div>
+                </portal:exams>
+
+            </div>
+            <ul class="pagination">
+                <page/>
+            </ul>
+        </div>
+        <div class="col-md-3">
+
+            <widget name="exam_category">
+                <div class="tc-box">
+                    <div class="headtitle">
+                        <h2>{$widget.title}</h2>
+                    </div>
+                    <div class="ranking">
+                        <ul class="list-unstyled">
+                            <portal:cates limit="5" order="cate.list_order ASC">
+                                <php>$top=$key<3?"top3":"";</php>
+                                <li class="{$top}">
+                                    <i>{$key+1}</i>
+                                    <a title="{$vo.name}"
+                                       href="{:cmf_url('portal/List/index',array('id'=>$vo['id']))}">
+                                        {$vo.name}
+                                    </a>
+                                </li>
+                            </portal:cates>
+                        </ul>
+                    </div>
+                </div>
+            </widget>
+
+            <widget name="exam_set">
+                <div class="tc-box">
+                    <div class="headtitle">
+                        <h2>{$widget.title}</h2>
+                    </div>
+                    <div class="ranking">
+                        <ul class="list-unstyled">
+                            <portal:sets limit="5" order="set.list_order ASC">
+                                <php>$top=$key<3?"top3":"";</php>
+                                <li class="{$top}">
+                                    <i>{$key+1}</i>
+                                    <a title="{$vo.name}"
+                                       href="{:cmf_url('portal/List/index',array('set_id'=>$vo['id']))}">
+                                        {$vo.name}
+                                    </a>
+                                </li>
+                            </portal:sets>
+                        </ul>
+                    </div>
+                </div>
+            </widget>
+
+
+
+        </div>
+    </div>
+
+    <include file="public@footer"/>
+</div>
+
+<include file="public@scripts"/>
+<hook name="before_body_end"/>
+</body>
+</html>

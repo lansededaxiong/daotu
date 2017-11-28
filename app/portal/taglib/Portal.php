@@ -19,9 +19,9 @@ class Portal extends TagLib
      */
     protected $tags = [
         // 标签定义： attr 属性列表 close 是否闭合（0 或者1 默认1） alias 标签别名 level 嵌套层次
-        'articles'   => ['attr' => 'field,where,limit,order,page,relation,returnVarName,pageVarName,categoryIds', 'close' => 1],//非必须属性item
-        'exams'   => ['attr' => 'field,where,limit,order,page,relation,returnVarName,pageVarName,categoryIds', 'close' => 1],//非必须属性item
-        'breadcrumb' => ['attr' => 'cid', 'close' => 1],//非必须属性self
+        'exams'   => ['attr' => 'field,where,limit,order,page,returnVarName,pageVarName,categoryIds', 'close' => 1],//非必须属性item
+        'cates'   => ['attr' => 'field,where,limit,order,returnVarName,pageVarName', 'close' => 1],//非必须属性item
+        'sets'    => ['attr' => 'field,where,limit,order,returnVarName,pageVarName', 'close' => 1],//非必须属性item
     ];
     /**
      * 试题列表标签
@@ -31,8 +31,7 @@ class Portal extends TagLib
         $item          = empty($tag['item']) ? 'vo' : $tag['item'];//循环变量名
         $field         = empty($tag['field']) ? '' : $tag['field'];
         $limit         = empty($tag['limit']) ? '10' : $tag['limit'];
-        $order         = empty($tag['order']) ? 'post.published_time DESC' : $tag['order'];
-        $relation      = empty($tag['relation']) ? '' : $tag['relation'];
+        $order         = empty($tag['order']) ? 'exam.published_time DESC' : $tag['order'];
         $pageVarName   = empty($tag['pageVarName']) ? '__PAGE_VAR_NAME__' : $tag['pageVarName'];
         $returnVarName = empty($tag['returnVarName']) ? 'exams_data' : $tag['returnVarName'];
 
@@ -60,6 +59,15 @@ class Portal extends TagLib
                 $categoryIds = "'{$tag['categoryIds']}'";
             }
         }
+        $setIds = "''";
+        if (!empty($tag['setIds'])) {
+            if (strpos($tag['setIds'], '$') === 0) {
+                $setIds = $tag['setIds'];
+                $this->autoBuildVar($setIds);
+            } else {
+                $setIds = "'{$tag['setIds']}'";
+            }
+        }
 
         $parse = <<<parse
 <?php
@@ -69,110 +77,89 @@ class Portal extends TagLib
     'limit'   => '{$limit}',
     'order'   => '{$order}',
     'page'    => $page,
-    'relation'=> '{$relation}',
-    'category_ids'=>{$categoryIds}
+    'category_ids'=>{$categoryIds},
+    'set_ids' => {$setIds}
 ]);
 
 \${$pageVarName} = isset(\${$returnVarName}['page'])?\${$returnVarName}['page']:'';
 
  ?>
-<volist name="{$returnVarName}.exams" id="{$item}">
+<volist name="{$returnVarName}.exams" id="{$item}" key="k">
 {$content}
 </volist>
 parse;
         return $parse;
     }
+
     /**
-     * 文章列表标签
+     * 试题章节分类列表标签
      */
-    public function tagArticles($tag, $content)
+    public function tagCates($tag, $content)
     {
         $item          = empty($tag['item']) ? 'vo' : $tag['item'];//循环变量名
         $field         = empty($tag['field']) ? '' : $tag['field'];
         $limit         = empty($tag['limit']) ? '10' : $tag['limit'];
-        $order         = empty($tag['order']) ? 'post.published_time DESC' : $tag['order'];
-        $relation      = empty($tag['relation']) ? '' : $tag['relation'];
+        $order         = empty($tag['order']) ? 'cate.list_order ASC' : $tag['order'];
         $pageVarName   = empty($tag['pageVarName']) ? '__PAGE_VAR_NAME__' : $tag['pageVarName'];
-        $returnVarName = empty($tag['returnVarName']) ? 'articles_data' : $tag['returnVarName'];
+        $returnVarName = empty($tag['returnVarName']) ? 'cates_data' : $tag['returnVarName'];
 
         $where = '""';
         if (!empty($tag['where']) && strpos($tag['where'], '$') === 0) {
             $where = $tag['where'];
         }
 
-        $page = "''";
-        if (!empty($tag['page'])) {
-            if (strpos($tag['page'], '$') === 0) {
-                $page = $tag['page'];
-            } else {
-                $page = intval($tag['page']);
-                $page = "'{$page}'";
-            }
-        }
-
-        $categoryIds = "''";
-        if (!empty($tag['categoryIds'])) {
-            if (strpos($tag['categoryIds'], '$') === 0) {
-                $categoryIds = $tag['categoryIds'];
-                $this->autoBuildVar($categoryIds);
-            } else {
-                $categoryIds = "'{$tag['categoryIds']}'";
-            }
-        }
-
         $parse = <<<parse
 <?php
-\${$returnVarName} = \app\portal\service\ApiService::articles([
+\${$returnVarName} = \app\portal\service\ApiService::cates([
     'field'   => '{$field}',
     'where'   => {$where},
     'limit'   => '{$limit}',
     'order'   => '{$order}',
-    'page'    => $page,
-    'relation'=> '{$relation}',
-    'category_ids'=>{$categoryIds}
 ]);
 
 \${$pageVarName} = isset(\${$returnVarName}['page'])?\${$returnVarName}['page']:'';
 
  ?>
-<volist name="{$returnVarName}.articles" id="{$item}">
+<volist name="{$returnVarName}.cates" id="{$item}" key="k">
 {$content}
 </volist>
 parse;
         return $parse;
     }
-
     /**
-     * 面包屑标签
+     * 试题套题列表标签
      */
-    public function tagBreadcrumb($tag, $content)
+    public function tagSets($tag, $content)
     {
-        $cid = empty($tag['cid']) ? '0' : $tag['cid'];
+        $item          = empty($tag['item']) ? 'vo' : $tag['item'];//循环变量名
+        $field         = empty($tag['field']) ? '' : $tag['field'];
+        $limit         = empty($tag['limit']) ? '10' : $tag['limit'];
+        $order         = empty($tag['order']) ? 'set.list_order ASC' : $tag['order'];
+        $pageVarName   = empty($tag['pageVarName']) ? '__PAGE_VAR_NAME__' : $tag['pageVarName'];
+        $returnVarName = empty($tag['returnVarName']) ? 'sets_data' : $tag['returnVarName'];
 
-        if (!empty($cid)) {
-            $this->autoBuildVar($cid);
+        $where = '""';
+        if (!empty($tag['where']) && strpos($tag['where'], '$') === 0) {
+            $where = $tag['where'];
         }
-
-        $self = isset($tag['self']) ? $tag['self'] : 'false';
 
         $parse = <<<parse
 <?php
-if(!empty({$cid})){
-    \$__BREADCRUMB_ITEMS__ = \app\portal\service\ApiService::breadcrumb({$cid},{$self});
-?>
+\${$returnVarName} = \app\portal\service\ApiService::sets([
+    'field'   => '{$field}',
+    'where'   => {$where},
+    'limit'   => '{$limit}',
+    'order'   => '{$order}',
+]);
 
-<volist name="__BREADCRUMB_ITEMS__" id="vo">
-    {$content}
+\${$pageVarName} = isset(\${$returnVarName}['page'])?\${$returnVarName}['page']:'';
+
+ ?>
+<volist name="{$returnVarName}.sets" id="{$item}" key="k">
+{$content}
 </volist>
-
-<?php
-}
-?>
 parse;
-
         return $parse;
-
     }
-
 
 }

@@ -1,0 +1,73 @@
+{
+    "name": "试题列表页",
+    "action": "portal/List/exam_set",
+    "description": "试题列表模板文件，套题分类",
+    "order": 10.0,
+    "more": {
+        "vars": {
+
+        },
+        "widgets":{
+            "exam_list": {
+                "title": "试题列表",
+                "display": "1",
+                "vars": {
+                    "exam_category_id": {
+                        "title": "试题分类ID",
+                        "value": "",
+                        "type": "text",
+                        "dataSource": {
+                            "api": "portal/category/index",
+                            "multi": true
+                        },
+                        "placeholder": "请选择分类",
+                        "tip": "",
+                        "rule": {
+                            "require": true
+                        }
+                    }
+                }
+            },
+            "exam_category": {
+                "title": "章节分类",
+                "display": "1",
+                "vars": {
+                    "exam_category_id": {
+                        "title": "试题分类ID",
+                        "value": "",
+                        "type": "text",
+                        "dataSource": {
+                            "api": "portal/category/index",
+                            "multi": true
+                        },
+                        "placeholder": "",
+                        "tip": "",
+                        "rule": {
+                            "require": true
+                        }
+                    }
+                }
+            },
+            "exam_set": {
+                "title": "套题",
+                "display": "1",
+                "vars": {
+                    "exam_set_id": {
+                        "title": "文章分类ID",
+                        "value": "",
+                        "type": "text",
+                        "dataSource": {
+                            "api": "portal/set/index",
+                            "multi": true
+                        },
+                        "placeholder": "",
+                        "tip": "",
+                        "rule": {
+                            "require": true
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

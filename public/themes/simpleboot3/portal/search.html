@@ -17,33 +17,18 @@
 			</div>
 			<php>
 				$where=[
-				'post.create_time'=>['egt',0],
-				'post.post_title'=>['like',"%$keyword%"]
+				'exam.create_time'=>['egt',0],
+				'tag.name'=>['like',"%$keyword%"]
 				];
 			</php>
 
-			<portal:articles item="vo" where="$where" order="post.create_time DESC" page="10">
+			<portal:exams item="vo" where="$where" order="exam.create_time DESC" page="10">
 
 				<div class="list-boxes">
-					<h2><a href="{:cmf_url('portal/Article/index',array('id'=>$vo['id']))}">{$vo.post_title}</a>
-					</h2>
-					<p>{$vo.post_excerpt}</p>
-					<div>
-						<div class="pull-left">
-							<div class="list-actions">
-								<a href="javascript:;"><i class="fa fa-eye"></i><span>{$vo.post_hits}</span></a>
-								<a href="{:cmf_url('portal/Article/doLike',array('id'=>$vo['id']))}"
-								   class="js-count-btn"><i class="fa fa-thumbs-up"></i><span class="count">{$vo.post_like}</span></a>
+					<a href="{:cmf_url('portal/Examination/index',array('id'=>$vo['id']))}">{$vo.exam_content}</a>
 
-									<i class="fa fa-star-o"></i>
-								</a>
-							</div>
-						</div>
-						<a class="btn btn-warning btn-sm pull-right"
-						   href="{:cmf_url('portal/Article/index',array('id'=>$vo['id']))}">查看更多</a>
-					</div>
 				</div>
-			</portal:articles>
+			</portal:exams>
 			<div class="pagination">
 				<page/>
 			</div>

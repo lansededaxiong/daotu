@@ -10,6 +10,8 @@
 // +----------------------------------------------------------------------
 namespace app\portal\controller;
 
+use app\portal\model\PortalClassificationModel;
+use app\portal\service\KnowledgeService;
 use cmf\controller\AdminBaseController;
 use app\portal\model\PortalKnowledgeModel;
 use think\Db;
@@ -32,10 +34,27 @@ class AdminKnowledgeController extends AdminBaseController
      */
     public function index()
     {
-        $portalKnowledgeModel = new PortalKnowledgeModel();
-        $knowledgeTree        = $portalKnowledgeModel->adminKnowledgeTableTree();
+        $param = $this->request->param();
 
-        $this->assign('knowledge_tree', $knowledgeTree);
+        $classificationId = $this->request->param('classification', 0, 'intval');
+
+        $knowledgeService = new KnowledgeService();
+        $data        = $knowledgeService->adminKnowledgeList($param);
+
+        $data->appends($param);
+
+
+        $portalClassificationModel = new PortalClassificationModel();
+        $classificationTree        = $portalClassificationModel->adminKnowledgeTree($classificationId);
+
+        $this->assign('start_time', isset($param['start_time']) ? $param['start_time'] : '');
+        $this->assign('end_time', isset($param['end_time']) ? $param['end_time'] : '');
+        $this->assign('keyword', isset($param['keyword']) ? $param['keyword'] : '');
+
+        $this->assign('classification_tree', $classificationTree);
+        $this->assign('classification', $classificationId);
+        $this->assign('knowledges', $data->items());
+        $this->assign('page', $data->render());
         return $this->fetch();
     }
 
@@ -54,11 +73,7 @@ class AdminKnowledgeController extends AdminBaseController
      */
     public function add()
     {
-        $parentId            = $this->request->param('parent', 0, 'intval');
-        $portalKnowledgeModel = new PortalKnowledgeModel();
-        $knowledgesTree      = $portalKnowledgeModel->adminKnowledgeTree($parentId);
 
-        $this->assign('knowledges_tree', $knowledgesTree);
         return $this->fetch();
     }
 
@@ -77,24 +92,26 @@ class AdminKnowledgeController extends AdminBaseController
      */
     public function addKnowledge()
     {
-        $portalKnowledgeModel = new PortalKnowledgeModel();
+        if ($this->request->isPost()) {
+            $data = $this->request->param();
+            $knowledge = $data['knowledge'];
+            $result = $this->validate($knowledge, 'PortalKnowledge');
+            if ($result !== true) {
+                $this->error($result);
+            }
+            $portalKnowledgeModel = new PortalKnowledgeModel();
 
-        $data = $this->request->param();
+            if (!empty($data['file_names']) && !empty($data['file_urls'])) {
+                $data['exam']['more']['files'] = [];
+                foreach ($data['file_urls'] as $key => $url) {
+                    $fileUrl = cmf_asset_relative_url($url);
+                    array_push($data['exam']['more']['files'], ["url" => $fileUrl, "name" => $data['file_names'][$key]]);
+                }
+            }
 
-        $result = $this->validate($data, 'PortalKnowledge');
-
-        if ($result !== true) {
-            $this->error($result);
+            $portalKnowledgeModel->adminAddKnowledge($data['knowledge'], $data['knowledge']['classifications']);
+            $this->success('添加成功!', url('AdminKnowledge/edit', ['id' => $portalKnowledgeModel->id]));
         }
-
-        $result = $portalKnowledgeModel->addKnowledge($data);
-
-        if ($result === false) {
-            $this->error('添加失败!');
-        }
-
-        $this->success('添加成功!', url('AdminKnowledge/index'));
-
     }
 
     /**
@@ -114,14 +131,19 @@ class AdminKnowledgeController extends AdminBaseController
     {
         $id = $this->request->param('id', 0, 'intval');
         if ($id > 0) {
-            $knowledge = PortalKnowledgeModel::get($id)->toArray();
-
             $portalKnowledgeModel = new PortalKnowledgeModel();
-            $knowledgesTree      = $portalKnowledgeModel->adminKnowledgeTree($knowledge['parent_id'], $id);
+            $knowledge = $portalKnowledgeModel->where('id', $id)->find();
 
-            $this->assign($knowledge);
 
-            $this->assign('knowledges_tree', $knowledgesTree);
+            $knowledgeClassifications  = $knowledge->classifications()->alias('e')->column('e.name', 'e.id');
+            $knowledgeClassificationIds = implode(',', array_keys($knowledgeClassifications));
+
+
+            $this->assign('knowledge_classifications', $knowledgeClassifications);
+            $this->assign('knowledge_classification_ids', $knowledgeClassificationIds);
+
+            $this->assign('knowledge',$knowledge);
+
             return $this->fetch();
         } else {
             $this->error('操作错误!');
@@ -145,8 +167,8 @@ class AdminKnowledgeController extends AdminBaseController
     public function editKnowledge()
     {
         $data = $this->request->param();
-
-        $result = $this->validate($data, 'PortalKnowledge');
+        $knowledge = $data['knowledge'];
+        $result = $this->validate($knowledge, 'PortalKnowledge');
 
         if ($result !== true) {
             $this->error($result);
@@ -154,7 +176,15 @@ class AdminKnowledgeController extends AdminBaseController
 
         $portalKnowledgeModel = new PortalKnowledgeModel();
 
-        $result = $portalKnowledgeModel->editKnowledge($data);
+        if (!empty($data['file_names']) && !empty($data['file_urls'])) {
+            $data['exam']['more']['files'] = [];
+            foreach ($data['file_urls'] as $key => $url) {
+                $fileUrl = cmf_asset_relative_url($url);
+                array_push($data['exam']['more']['files'], ["url" => $fileUrl, "name" => $data['file_names'][$key]]);
+            }
+        }
+
+        $result = $portalKnowledgeModel->adminEditKnowledge($data['knowledge'], $data['knowledge']['classifications']);
 
         if ($result === false) {
             $this->error('保存失败!');
@@ -163,46 +193,7 @@ class AdminKnowledgeController extends AdminBaseController
         $this->success('保存成功!');
     }
 
-    /**
-     * 试题知识点选择对话框
-     * @adminMenu(
-     *     'name'   => '试题知识点选择对话框',
-     *     'parent' => 'index',
-     *     'display'=> false,
-     *     'hasView'=> true,
-     *     'order'  => 10000,
-     *     'icon'   => '',
-     *     'remark' => '试题知识点选择对话框',
-     *     'param'  => ''
-     * )
-     */
-    public function select()
-    {
-        $ids                 = $this->request->param('ids');
-        $selectedIds         = explode(',', $ids);
-        $portalKnowledgeModel = new PortalKnowledgeModel();
 
-        $tpl = <<<tpl
-<tr class='data-item-tr'>
-    <td>
-        <input type='checkbox' class='js-check' data-yid='js-check-y' data-xid='js-check-x' name='ids[]'
-               value='\$id' data-name='\$name' \$checked>
-    </td>
-    <td>\$id</td>
-    <td>\$spacer <a href='\$url' target='_blank'>\$name</a></td>
-</tr>
-tpl;
-
-        $knowledgeTree = $portalKnowledgeModel->adminKnowledgeTableTree($selectedIds, $tpl);
-
-        $where      = ['delete_time' => 0];
-        $knowledges = $portalKnowledgeModel->where($where)->select();
-
-        $this->assign('knowledges', $knowledges);
-        $this->assign('selectedIds', $selectedIds);
-        $this->assign('knowledge_tree', $knowledgeTree);
-        return $this->fetch();
-    }
 
     /**
      * 试题知识点排序

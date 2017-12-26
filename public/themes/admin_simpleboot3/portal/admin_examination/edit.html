@@ -3,6 +3,41 @@
     .pic-list li {
         margin-bottom: 5px;
     }
+    *:focus {outline:none;}
+    #mathEditorFrame{height: 500px; width: 100%; border: 0;}
+    #preview{padding: 30px; font-size: 18px;}
+    #processLink{
+        background:#fff;
+        position: absolute;
+        width: 50%;
+        top: 50px;
+        left: 50%;
+        margin-left: -25%;
+        border-radius: 3px;
+        border: 1px #ccc solid;
+        padding: 20px;
+        box-shadow: 0px 3px 6px #eee;
+        display: none;
+    }
+    #processLink .close{
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 1px #ccc solid;
+        text-align: center;
+        line-height: 30px;
+        color: red;
+        font-size: 14px;
+        opacity: 1;
+        top: -15px;
+        position: absolute;
+        background: #fff;
+        right: -15px;
+    }
+
+    #processLink input{
+        width: 100%;
+    }
 </style>
 <script type="text/html" id="photos-item-tpl">
     <li id="saved-image{id}">
@@ -182,6 +217,13 @@
                 </table>
             </div>
         </div>
+        <div id="processLink">
+            <div class="close">X</div>
+            <input type="text" name="tag" value="" class="tag" placeholder="标签" />
+            <div class="content">
+
+            </div>
+        </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
                 <button type="submit"  id="btn"  class="btn btn-primary js-ajax-submit">{:lang('SAVE')}</button>
@@ -191,6 +233,7 @@
     </form>
 </div>
 <script type="text/javascript" src="__STATIC__/js/admin.js"></script>
+<script src="__TMPL__/public/assets/MathEditor/index.js"></script>
 <script type="text/javascript">
 
     $(function () {
@@ -204,7 +247,7 @@
 
         $("#btn").click(function(){
 
-            $("#preview").val(loadMathEditor('mathEditorFrame'));
+            $("#preview").val(loadAdminMathEditor('mathEditorFrame'));
         });
 
         $('.btn-cancel-thumbnail').click(function () {

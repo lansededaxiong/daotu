@@ -87,3 +87,11 @@ $(document).keypress(function(e){
     }
 });
 
+function processLink() {
+    window.parent.processLink();
+}
+
+function setProcessLink(link) {
+    document.execCommand('CreateLink', false, link);
+}
+

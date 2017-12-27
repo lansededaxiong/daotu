@@ -6,6 +6,9 @@
     <meta name="description" content="{$site_info.site_seo_description|default=''}">
     <include file="public@head"/>
     <hook name="before_head_end"/>
+    <style>
+        .MJX_Assistive_MathML{display: none}
+    </style>
 </head>
 <body class="body-white">
 <include file="public@nav"/>
@@ -22,8 +25,9 @@
 					</span>
                     </div>
                     <hr>
+                    <php>$content = str_replace("http://dev.daotu.com/upload/","",$exam['exam_content']);</php>
                     <div id="exam_content">
-                        {$exam.exam_content}
+                        {$content}
                     </div>
                     <else/>
                     <h2 style="text-align: center;">由于某些原因，此试题已被管理员关闭!</h2>

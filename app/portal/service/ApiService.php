@@ -101,7 +101,6 @@ class ApiService
 
 
             $examinations->appends(request()->param());
-
             $return['exams']    = $examinations->items();
             $return['page']        = $examinations->render();
             $return['total']       = $examinations->total();

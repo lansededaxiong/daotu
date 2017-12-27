@@ -27,11 +27,12 @@
                                  returnVarName="exams_data">
                     <div class="list-boxes">
                         </h2>
+                        <php>$content = str_replace("http://dev.daotu.com/upload/","",$vo['exam_content']);</php>
                         <div>
                             <div class="pull-left">
                                 <div class="list-actions">
                                     <p>
-                                        ({$category.p_cat}.{$category.name})&nbsp;&nbsp;{$vo.exam_content}
+                                        ({$category.p_cat}.{$category.name})&nbsp;&nbsp;{$content}
                                     </p>
                                 </div>
                             </div>
@@ -96,7 +97,6 @@
 
         </div>
     </div>
-
     <include file="public@footer"/>
 </div>
 

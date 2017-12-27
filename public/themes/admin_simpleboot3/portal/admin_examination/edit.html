@@ -1,17 +1,19 @@
 <include file="public@header"/>
 <style type="text/css">
     .pic-list li {
-        margin-bottom: 5px;
+    margin-bottom: 5px;
     }
     *:focus {outline:none;}
     #mathEditorFrame{height: 500px; width: 100%; border: 0;}
     #preview{padding: 30px; font-size: 18px;}
+    #mathEditorFrame2{height: 500px; width: 100%; border: 0;}
+    #preview2{padding: 30px; font-size: 18px;}
     #processLink{
         background:#fff;
         position: absolute;
         width: 50%;
-        top: 50px;
         left: 50%;
+        top: 15%;
         margin-left: -25%;
         border-radius: 3px;
         border: 1px #ccc solid;
@@ -37,6 +39,30 @@
 
     #processLink input{
         width: 100%;
+        padding: 4px;
+    }
+    .knowledge-list{padding: 0;margin: 0;}
+    .knowledge-list ul{
+        display: block;
+        margin: 0;
+        -webkit-padding-start: 0;
+    }
+    .knowledge-list li{
+        position: relative;
+        margin-left: 0;
+        list-style-type: none;
+    }
+    .knowledge-list li a{
+        display: block;
+        padding: 7px 0 8px 10px;
+        margin: 0;
+        font-size: 14px;
+        border-top: 1px solid #fcfcfc;
+        border-bottom: 1px solid #e5e5e5;
+    }
+    .knowledge-list li a:hover{
+        text-decoration: none;
+        color: #0a4b3e;
     }
 </style>
 <script type="text/html" id="photos-item-tpl">
@@ -119,6 +145,13 @@
                         <td>
                             <textarea id="preview" name="exam[exam_content]" class="form-control" rows="5" style="display: none;" >{$exam.exam_content}</textarea>
                             <iframe id="mathEditorFrame" src="__TMPL__/public/assets/MathEditor/exam.html?exam_id={$exam.id}"></iframe>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>答案</th>
+                        <td>
+                            <textarea id="preview2" name="exam[exam_answer]" class="form-control" rows="5" style="display: none;" >{$exam.exam_answer}</textarea>
+                            <iframe id="mathEditorFrame2" src="__TMPL__/public/assets/MathEditor/answer.html?answer_id={$exam.id}"></iframe>
                         </td>
                     </tr>
                     <tr>
@@ -220,7 +253,7 @@
         <div id="processLink">
             <div class="close">X</div>
             <input type="text" name="tag" value="" class="tag" placeholder="标签" />
-            <div class="content">
+            <div class="content knowledge-list">
 
             </div>
         </div>
@@ -237,6 +270,7 @@
 <script type="text/javascript">
 
     $(function () {
+        //试题
         var exam_content =  $("#preview").val();
 
         if(exam_content){
@@ -244,10 +278,18 @@
             sessionStorage.setItem('exam_' + key,null); // 存入一个值
             sessionStorage.setItem('exam_' + key,exam_content); // 存入一个值
         }
+        //答案
+        var exam_answer =  $("#preview2").val();
+
+        if(exam_answer){
+            var key = "{$exam.id}";
+            sessionStorage.setItem('answer_' + key,null); // 存入一个值
+            sessionStorage.setItem('answer_' + key,exam_answer); // 存入一个值
+        }
 
         $("#btn").click(function(){
-
             $("#preview").val(loadAdminMathEditor('mathEditorFrame'));
+            $("#preview2").val(loadAdminMathEditor('mathEditorFrame2'));
         });
 
         $('.btn-cancel-thumbnail').click(function () {

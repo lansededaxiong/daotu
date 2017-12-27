@@ -136,7 +136,7 @@ class ExaminationService
                 'exam.id '             => ['<',$examId]
             ];
 
-            $exam = $portalExamModel->alias('exam')->field('post.*')
+            $exam = $portalExamModel->alias('exam')->field('exam.*')
                 ->where($where)
                 ->order('id', 'DESC')
                 ->find();
@@ -178,7 +178,7 @@ class ExaminationService
                 'exam.id '             => ['>',$examId]
             ];
 
-            $exam = $portalExamModel->alias('exam')->field('post.*')
+            $exam = $portalExamModel->alias('exam')->field('exam.*')
                 ->where($where)
                 ->order('id', 'DESC')
                 ->find();

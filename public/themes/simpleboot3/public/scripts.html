@@ -80,5 +80,22 @@ var GV = {
 		
 		
 	});
+    function getProcessLink(pid)
+    {
+        //这里通过 AJAX 获取中间页的 HTML
+        $.ajax({
+            url:'/portal/Addon/ajaxGetKnowledge',
+            type:'post',
+            data: {id:pid},
+            dataType: 'json',
+            beforeSend: function () {$("loading").show();},
+            success:function (data) {
+                if(data.status == 1){
+                    console.log(data.data);
+                }
+
+            }
+        });
+    }
 	</script>
 

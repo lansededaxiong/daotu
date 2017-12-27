@@ -10,6 +10,7 @@ function loadAdminMathEditor(id) {
     for(var k=0,len = lis.length;k<len;k++){
         retlis += clearScript(lis[k])
     }
+
     console.log(retlis);
     return retlis;
 }
@@ -36,7 +37,6 @@ MathJax.Hub.Config({
 
 function processLink() {
     $("#processLink").show();
-    return "javascript:getProcessLink(123)";
 }
 
 function closeProcessLink() {
@@ -46,9 +46,9 @@ function closeProcessLink() {
 }
 
 function setProcessLinkId() {
-    $("#processLink .content li a.tag").click(function () {
-        var tag_id = $(this).attr("data-value");
-        var link = "javascript:getProcessLink("+tag_id+")";
+    $("#processLink .content li a.knowledge-list").click(function () {
+        var knowledge_id = $(this).attr("data-value");
+        var link = "javascript:getProcessLink("+knowledge_id+")";
         $("#mathEditorFrame")[0].contentWindow.setProcessLink(link);
         $("#processLink").hide();
     });
@@ -57,29 +57,33 @@ function setProcessLinkId() {
 function processSuggest() {
     $("#processLink .tag").keyup(function () {
         var val = $(this).val();
-        console.log(val);
         if(val.length < 2){
             $("#processLink .content").html('');
             return false;
         }
-        $.get("/themes/admin_simpleboot3/Public/suggest.json",{ tag: val},function (json) {
-            var html = '<ul>';
+        $.ajax({
+            url:'/portal/Addon/ajaxGetKnowledges',
+            type:'post',
+            data: {keyword:val},
+            dataType: 'json',
+            beforeSend: function () {$("loading").show();},
+            success:function (data) {
+                if(data.status == 1){
+                    var json = data.data;
+                    console.log(data.data);
+                    $("loading").hide();
+                    var html = '<ul>';
 
-            for(var i=0; i<json.length; i++){
-                html += '<li><a href="##" class="tag" data-value="'+ json[i].tag_id +'">'+ json[i].tag_name +'</a></li>';
+                    for(var i=0; i<json.length; i++){
+                        html += '<li><a href="##" class="knowledge-list" data-value="'+ json[i].id +'">'+ json[i].name +'</a></li>';
+                    }
+                    html += '</ul>';
+                    $("#processLink .content").html(html);
+
+                    setProcessLinkId();
+                }
+
             }
-
-            html += '</ul>';
-            $("#processLink .content").html(html);
-
-            setProcessLinkId();
         })
     });
-}
-
-
-function getProcessLink(pid)
-{
-    //这里通过 AJAX 获取中间页的 HTML
-    alert("这里通过 AJAX 获取中间页 ID 为 "+ pid +" 的HTML");
 }

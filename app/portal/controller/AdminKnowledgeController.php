@@ -266,4 +266,5 @@ class AdminKnowledgeController extends AdminBaseController
             $this->error('删除失败');
         }
     }
+
 }

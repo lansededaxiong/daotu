@@ -42,6 +42,8 @@ class ApiService
 
         $join = [
             ['__USER__ user', 'exam.user_id = user.id'],
+            ['__PORTAL_TAG_EXAM__ tag_exam', 'exam.id = tag_exam.exam_id'],
+            ['__PORTAL_TAG__ tag', 'tag.id = tag_exam.tag_id'],
         ];
 
         if(!empty($setIds)){

@@ -6,6 +6,9 @@
 		<meta name="description" content="">
 		<include file="public@head"/>
 		<hook name="before_head_end"/>
+		<style>
+			.MJX_Assistive_MathML{display: none}
+		</style>
 	</head>
 <body class="">
 <include file="public@nav"/>
@@ -23,11 +26,13 @@
 			</php>
 
 			<portal:exams item="vo" where="$where" order="exam.create_time DESC" page="10">
-
+				<php>$content = str_replace("http://dev.daotu.com/upload/","",$vo['exam_content']);</php>
 				<div class="list-boxes">
-					<a href="{:cmf_url('portal/Examination/index',array('id'=>$vo['id']))}">{$vo.exam_content}</a>
-
+					{$vo.exam_content}
+					<a class="btn btn-warning btn-sm pull-right"
+					   href="{:cmf_url('portal/Examination/index',array('id'=>$vo['id']))}">查看更多</a>
 				</div>
+
 			</portal:exams>
 			<div class="pagination">
 				<page/>

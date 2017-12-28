@@ -272,20 +272,15 @@
     $(function () {
         //试题
         var exam_content =  $("#preview").val();
+        var key = "{$exam.id}";
+        sessionStorage.setItem('exam_' + key,null); // 存入一个值
+        sessionStorage.setItem('exam_' + key,exam_content); // 存入一个值
 
-        if(exam_content){
-            var key = "{$exam.id}";
-            sessionStorage.setItem('exam_' + key,null); // 存入一个值
-            sessionStorage.setItem('exam_' + key,exam_content); // 存入一个值
-        }
         //答案
         var exam_answer =  $("#preview2").val();
+        sessionStorage.setItem('answer_' + key,null); // 存入一个值
+        sessionStorage.setItem('answer_' + key,exam_answer); // 存入一个值
 
-        if(exam_answer){
-            var key = "{$exam.id}";
-            sessionStorage.setItem('answer_' + key,null); // 存入一个值
-            sessionStorage.setItem('answer_' + key,exam_answer); // 存入一个值
-        }
 
         $("#btn").click(function(){
             $("#preview").val(loadAdminMathEditor('mathEditorFrame'));

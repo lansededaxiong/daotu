@@ -25,9 +25,15 @@
 					</span>
                     </div>
                     <hr>
-                    <php>$content = str_replace("http://dev.daotu.com/upload/","",$exam['exam_content']);</php>
+                    <php>
+                        $content = str_replace("http://dev.daotu.com/upload/","",$exam['exam_content']);
+                        $answer = str_replace("http://dev.daotu.com/upload/","",$exam['exam_answer']);
+                    </php>
                     <div id="exam_content">
                         {$content}
+                    </div>
+                    <div id="exam_answer">
+                        {$answer}
                     </div>
                     <else/>
                     <h2 style="text-align: center;">由于某些原因，此试题已被管理员关闭!</h2>
@@ -38,7 +44,6 @@
 
     <include file="public@footer"/>
 </div>
-
 <include file="public@scripts"/>
 <hook name="before_body_end"/>
 </body>

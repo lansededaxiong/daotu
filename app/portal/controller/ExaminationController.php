@@ -27,12 +27,9 @@ class ExaminationController extends HomeBaseController
         $examId  = $this->request->param('id', 0, 'intval');
         $categoryId = $this->request->param('cid', 0, 'intval');
         $exam    = $examService->publishedExamination($examId, $categoryId);
-
         if (empty($examId)) {
             abort(404, '试题不存在!');
         }
-
-
         $prevExam = $examService->publishedPrevExam($examId, $categoryId);
         $nextExam = $examService->publishedNextExam($examId, $categoryId);
 

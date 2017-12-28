@@ -117,8 +117,7 @@ class ExaminationService
                 ->where($where)
                 ->find();
         }
-
-
+        $examinations['exam_answer'] = $portalExamModel->getExamContentAttr($examinations['exam_answer']);
         return $examinations;
     }
 

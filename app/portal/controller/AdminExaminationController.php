@@ -140,7 +140,6 @@ class AdminExaminationController extends AdminBaseController
         $exam            = $portalExaminationModel->where('id', $id)->find();
         $examCategories  = $exam->categories()->alias('e')->column('e.name', 'e.id');
         $examCategoryIds = implode(',', array_keys($examCategories));
-
         $this->assign('exam', $exam);
         $this->assign('post_categories', $examCategories);
         $this->assign('post_category_ids', $examCategoryIds);
